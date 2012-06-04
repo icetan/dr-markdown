@@ -1,10 +1,12 @@
 coffeete = require 'coffeete'
+markdown = new require('showdown').Showdown
+markdown.converter()
 
 view =
   header: ''
   body: ''
 
-  markdown: (txt) -> markdown.toHTML txt
+  markdown: (txt) -> markdown.makeHtml txt
   trim: (str) -> str.replace new RegExp('^\\s*([^\u0000]*?)\\s*$'), '$1'
   fstLetter: (txt, f) ->
     txt = @trim txt
@@ -25,10 +27,30 @@ number = ->
       count sel
       h.setAttribute 'data-number', num h.tagName
 
+
 require('domready') ->
+  $ = jQuery
+  updateView = ->
+    ta = $('#markdown-input')
+    iw = $('#input-wrap')
+    v = $('#view')
+    v.html markdown.makeHtml ta.val()
+    ta.height v.height() or 60 #- iw.position().top - (iw.outerHeight(true) - iw.height())
   reader = new FileReader
   reader.onload = (e) ->
     view.body = e.target.result
     $('body')[0].innerHTML = coffeete($('#template')[0].text) view
     #number()
-  $('#file')[0].onchange = -> reader.readAsText @files[0]
+  $('#file').change -> reader.readAsText @files[0]
+
+  $('body').click -> $('#markdown-input').focus()
+  $('#markdown-input')
+  .keyup(updateView)
+  .keydown (e) ->
+    key = e.keyCode
+    console.log e.keyCode
+    if key is 9 # Tab
+      pos = $(@).getCursorPosition()
+      @value = @value.substr(0, pos) + '    ' + @value.substr(pos)
+      false
+  updateView()

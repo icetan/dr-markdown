@@ -1,6 +1,7 @@
 html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
 
-body{
+
+.markdown {
 color:#444;
 font-family:Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif;
 font-size:12px;
@@ -77,16 +78,16 @@ table { border-collapse: collapse; border-spacing: 0; }
 td { vertical-align: top; }
 
 @media only screen and (min-width: 480px) {
-body{font-size:14px;}
+body, .markdown {font-size:14px;}
 }
 
 @media only screen and (min-width: 768px) {
-body{font-size:16px;}
+body, .markdown {font-size:16px;}
 }
 
 @media print {
   * { background: transparent !important; color: black !important; filter:none !important; -ms-filter: none !important; }
-  body{font-size:12pt; max-width:100%;}
+  .markdown{font-size:12pt; max-width:100%;}
   a, a:visited { text-decoration: underline; }
   hr { height: 1px; border:0; border-bottom:1px solid black; }
   a[href]:after { content: " (" attr(href) ")"; }

@@ -1,0 +1,65 @@
+.clear-fix {
+  clear: both;
+  height: 0;
+}
+
+textarea:focus, input:focus {
+    outline: none;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  min-height: 100%;
+}
+
+#container {
+  width: 84em;
+  height: 100%;
+  margin: 0 auto;
+}
+
+#input-wrap {
+  padding: 1em 45em 1em 1em;
+  position: absolute;
+  top: 80px;
+  left: 0;
+  right: 0;
+}
+
+#markdown-input {
+  padding: 0;
+  border: none;
+  resize: none;
+  width: 100%;
+  height: 100%;
+  font-size: 12px;
+  font-family: Monaco, Courier New;
+}
+
+#view {
+  width: 42em;
+  position: absolute;
+  top: 80px;
+  right: 0;
+  border-left: 1px solid #ccc;
+}
+
+
+#controls {
+  padding: 1em;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#333333', endColorstr='#222222', GradientType=0);
+  -webkit-box-shadow: 0 1px 12px -2px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+     -moz-box-shadow: 0 1px 12px -2px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+          box-shadow: 0 1px 12px -2px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
