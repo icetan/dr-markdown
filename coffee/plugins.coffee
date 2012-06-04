@@ -30,4 +30,14 @@ $.fn.number = ->
   for h, i in $(selector, @)
     t = h.tagName
     count t
-    h.setAttribute 'data-number', num t if t not in ['OL', 'UL']
+    $(h).attr 'data-number', num t if t not in ['OL', 'UL']
+
+$.fn.generateToc = ->
+  '<ul>' + (for e, i in $('[data-number]', @)
+    numbers = $(e).attr('data-number').split(',')
+    """
+    <li><a href="##{e.id}"><#{e.tagName}>
+      #{numbers.join '. '}. #{e.textContent or e.innerText}
+    </#{e.tagName}></a></li>
+    """
+  ).join('') + '</ul>'

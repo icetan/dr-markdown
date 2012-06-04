@@ -5,19 +5,29 @@
   markdown = new Showdown.converter();
 
   $(document).ready(function() {
-    var reader, updateView;
+    var addToc, reader, updateView;
+    addToc = function() {
+      var v;
+      v = $('#view');
+      v.number();
+      return $('#toc').html(v.generateToc());
+    };
     updateView = function() {
-      var ta, v;
+      var hasToc, ta, v;
+      hasToc = $('#toc').text().trim() !== '';
       ta = $('#markdown-input');
       v = $('#view');
       v.html(markdown.makeHtml(ta.val()));
-      return v.number();
+      if (hasToc) {
+        return addToc();
+      }
     };
     reader = new FileReader;
     reader.onload = function(e) {
       $('#markdown-input').val(e.target.result);
       return updateView();
     };
+    $('#addToc').click(addToc);
     $('#file').change(function() {
       return reader.readAsText(this.files[0]);
     });

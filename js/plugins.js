@@ -62,12 +62,27 @@
       t = h.tagName;
       count(t);
       if (t !== 'OL' && t !== 'UL') {
-        _results.push(h.setAttribute('data-number', num(t)));
+        _results.push($(h).attr('data-number', num(t)));
       } else {
         _results.push(void 0);
       }
     }
     return _results;
+  };
+
+  $.fn.generateToc = function() {
+    var e, i, numbers;
+    return '<ul>' + ((function() {
+      var _i, _len, _ref, _results;
+      _ref = $('[data-number]', this);
+      _results = [];
+      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+        e = _ref[i];
+        numbers = $(e).attr('data-number').split(',');
+        _results.push("<li><a href=\"#" + e.id + "\"><" + e.tagName + ">\n  " + (numbers.join('. ')) + ". " + (e.textContent || e.innerText) + "\n</" + e.tagName + "></a></li>");
+      }
+      return _results;
+    }).call(this)).join('') + '</ul>';
   };
 
 }).call(this);

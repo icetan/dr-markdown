@@ -17,11 +17,15 @@
 <body>
   <div id="controls">
     <input type="file" id="file">
+    <a id="addToc">add TOC</a>
   </div>
   <div id="input-wrap">
     <textarea id="markdown-input"></textarea>
   </div>
-  <div id="view" class="markdown"></div>
+  <div id="view-wrap">
+    <div id="toc"></div>
+    <div id="view" class="markdown"></div>
+  </div>
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"
     type="text/javascript"></script>
