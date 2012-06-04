@@ -7,14 +7,14 @@ textarea:focus, input:focus {
     outline: none;
 }
 
-html {
+html, body {
   height: 100%;
+  overflow: hidden;
 }
 
 body {
   padding: 0;
   margin: 0;
-  min-height: 100%;
 }
 
 #container {
@@ -24,11 +24,12 @@ body {
 }
 
 #input-wrap {
-  padding: 1em 45em 1em 1em;
+  padding: 0 44em 0 1em;
   position: absolute;
-  top: 80px;
+  top: 3.5em;
   left: 0;
   right: 0;
+  bottom: 0;
 }
 
 #markdown-input {
@@ -44,22 +45,25 @@ body {
 #view {
   width: 42em;
   position: absolute;
-  top: 80px;
+  top: 0;
   right: 0;
-  border-left: 1px solid #ccc;
+  bottom: 0;
+  overflow-y: scroll;
+  -webkit-box-shadow: -2px 0 30px 0 rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+     -moz-box-shadow: -2px 0 30px 0 rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+          box-shadow: -2px 0 30px 0 rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 
 
 #controls {
-  padding: 1em;
+  margin: 0 45em 0 1em;
+  padding: 1em 0 1em 0;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 3;
-  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#333333', endColorstr='#222222', GradientType=0);
-  -webkit-box-shadow: 0 1px 12px -2px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-     -moz-box-shadow: 0 1px 12px -2px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-          box-shadow: 0 1px 12px -2px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  height: 1.5em;
+  z-index: 2;
+  border-bottom: 1px solid #ccc;
 }
 
