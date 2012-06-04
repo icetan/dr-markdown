@@ -5,44 +5,40 @@
   markdown = new Showdown.converter();
 
   $(document).ready(function() {
-    var addToc, reader, updateView;
-    addToc = function() {
+    var editor, reader, updateToc, updateView;
+    updateToc = function() {
       var v;
       v = $('#view');
       v.number();
       return $('#toc').html(v.generateToc());
     };
     updateView = function() {
-      var hasToc, ta, v;
-      hasToc = $('#toc').text().trim() !== '';
-      ta = $('#markdown-input');
+      var ta, v;
+      ta = $('#input-md');
       v = $('#view');
-      v.html(markdown.makeHtml(ta.val()));
-      if (hasToc) {
-        return addToc();
+      v.html(markdown.makeHtml(editor.getValue()));
+      if (!$('#toc').hasClass('hidden')) {
+        return updateToc();
       }
     };
     reader = new FileReader;
     reader.onload = function(e) {
-      $('#markdown-input').val(e.target.result);
+      editor.setValue(e.target.result);
       return updateView();
     };
-    $('#addToc').click(addToc);
+    $('#toggleToc').click(function() {
+      updateToc();
+      return $('#toc').toggleClass('hidden');
+    });
     $('#file').change(function() {
       return reader.readAsText(this.files[0]);
     });
-    $('body').click(function() {
-      return $('#markdown-input').focus();
-    });
-    $('#markdown-input').keyup(updateView).keydown(function(e) {
-      var key, pos;
-      key = e.keyCode;
-      console.log(e.keyCode);
-      if (key === 9) {
-        pos = $(this).getCursorPosition();
-        this.value = this.value.substr(0, pos) + '    ' + this.value.substr(pos);
-        return false;
-      }
+    editor = CodeMirror.fromTextArea($('#input-md')[0], {
+      mode: 'gfm',
+      theme: 'neat',
+      lineNumbers: false,
+      lineWrapping: true,
+      onChange: updateView
     });
     return updateView();
   });

@@ -1,3 +1,8 @@
+.hidden {
+  display: none;
+  visibility: hidden;
+}
+
 .clear-fix {
   clear: both;
   height: 0;
@@ -5,6 +10,12 @@
 
 textarea:focus, input:focus {
     outline: none;
+}
+
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
 }
 
 html, body {
@@ -32,14 +43,12 @@ body {
   bottom: 0;
 }
 
-#markdown-input {
+#input-md, #input-css {
   padding: 0;
   border: none;
   resize: none;
   width: 100%;
   height: 100%;
-  font-size: 12px;
-  font-family: Monaco, Courier New;
 }
 
 #view-wrap {
@@ -66,9 +75,63 @@ body {
   border-bottom: 1px solid #ccc;
 }
 
+#toc-wrap {
+  margin: 1em;
+  padding: 1em;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
 #toc {
   font-size: 0.6em;
+  max-height: 720px;
+  overflow: hidden;
+  -webkit-transition: max-height 0.3s linear;
+     -moz-transition: max-height 0.3s linear;
+      -ms-transition: max-height 0.3s linear;
+       -o-transition: max-height 0.3s linear;
+          transition: max-height 0.3s linear;
+}
+#toc.hidden {
+  display: block;
+  visibility: visible;
+  max-height: 0;
+}
+#toc, #toc a, #toc a:hover, #toc a:active, #toc a:visited {
+  color: #666;
 }
 #toc ul {
+  padding-left: 0;
   list-style: none;
+}
+
+/* CodeMirror */
+#input-wrap .CodeMirror, 
+#input-wrap .CodeMirror-scroll {
+  height: 100%;
+}
+#input-wrap .CodeMirror pre {
+  font-size: 12px;
+  font-family: Monaco, Courier New, monospace;
+}
+#input-wrap .CodeMirror-lines {
+  padding-left: 0;
+}
+
+/* Print media */
+@media print {
+  html, body {
+    height: auto !important;
+    overflow: auto !important;
+  }
+  #view-wrap {
+    width: auto !important;
+    overflow: auto !important;
+    position: relative !important;
+    bottom: auto !important;
+  }
+  #controls, #input-wrap {
+    display: none !important;
+  }
 }
