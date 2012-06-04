@@ -74,6 +74,18 @@ body {
   z-index: 2;
   border-bottom: 1px solid #ccc;
 }
+#import {
+  overflow: hidden;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+#file {
+  position: absolute;
+  visibility: hidden;
+  z-index: 5;
+}
 
 #toc-wrap {
   margin: 1em;

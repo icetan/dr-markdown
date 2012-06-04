@@ -15,11 +15,16 @@
 
   <link href="lib/codemirror/codemirror.css" rel="stylesheet"></link>
   <link href="lib/codemirror/neat.css" rel="stylesheet"></link>
+
+  <link href="lib/font-awesome/css/font-awesome.css" rel="stylesheet"></link>
 </head>
 
 <body>
   <div id="controls">
-    <input type="file" id="file">
+    <div id="import">
+      <input type="file" id="file">
+      <i class="icon-file"></i>
+    </div>
   </div>
 
   <div id="input-wrap">
@@ -29,7 +34,7 @@
 
   <div id="view-wrap">
     <div id="toc-wrap">
-      <span id="toggleToc">toggle</span>
+      <span id="toggleToc" style="font-size:18px"><i class="icon-plus"></i></span>
       <div id="toc" class="hidden"></div>
     </div>
     <div id="view" class="markdown"></div>
