@@ -1,3 +1,9 @@
+::-moz-selection{background:rgba(255,255,0,0.3);color:#000}
+::selection{background:rgba(255,255,0,0.3);color:#000}
+
+a::-moz-selection{background:rgba(255,255,0,0.3);color:#0645ad}
+a::selection{background:rgba(255,255,0,0.3);color:#0645ad}
+
 .hidden {
   display: none;
   visibility: hidden;
@@ -131,6 +137,9 @@ body {
 #input-wrap .CodeMirror-lines {
   padding-left: 0;
   padding-top: 1em;
+}
+#input-wrap .CodeMirror-focused div.CodeMirror-selected {
+  background: rgba(255, 255, 0, 0.3);
 }
 
 /* Print media */

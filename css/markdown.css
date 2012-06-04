@@ -28,22 +28,6 @@
 .markdown a:active {
   outline: 0;
 }
-.markdown::-moz-selection {
-  background: rgba(255, 255, 0, 0.3);
-  color: #000000;
-}
-.markdown::selection {
-  background: rgba(255, 255, 0, 0.3);
-  color: #000000;
-}
-.markdown a::-moz-selection {
-  background: rgba(255, 255, 0, 0.3);
-  color: #0645ad;
-}
-.markdown a::selection {
-  background: rgba(255, 255, 0, 0.3);
-  color: #0645ad;
-}
 .markdown p {
   margin: 1em 0;
 }
