@@ -21,17 +21,19 @@
         return updateToc();
       }
     };
-    reader = new FileReader;
-    reader.onload = function(e) {
-      editor.setValue(e.target.result);
-      return updateView();
-    };
+    if (typeof FileReader !== "undefined" && FileReader !== null) {
+      reader = new FileReader;
+      reader.onload = function(e) {
+        editor.setValue(e.target.result);
+        return updateView();
+      };
+      $('#file').change(function() {
+        return reader.readAsText(this.files[0]);
+      });
+    }
     $('#toggleToc').click(function() {
       updateToc();
       return $('#toc').toggleClass('hidden');
-    });
-    $('#file').change(function() {
-      return reader.readAsText(this.files[0]);
     });
     editor = CodeMirror.fromTextArea($('#input-md')[0], {
       mode: 'gfm',
