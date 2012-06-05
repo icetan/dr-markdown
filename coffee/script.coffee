@@ -1,16 +1,16 @@
 markdown = new Showdown.converter()
 
 $(document).ready ->
-  updateToc = ->
-    v = $('#view')
-    v.number()
-    $('#toc').html v.generateToc()
+  updateToc = -> $('#toc').html $('#view').toc()
+
+  updateIndex = -> $('#view').number().index()
 
   updateView = ->
-    ta = $('#input-md')
     v = $('#view')
     v.html markdown.makeHtml editor.getValue()
-    updateToc() if not $('#toc').hasClass('hidden')
+    if not $('#toc').hasClass('hidden')
+      updateIndex() if $('#view-wrap').hasClass('indexed')
+      updateToc()
 
   if FileReader?
     reader = new FileReader
@@ -19,9 +19,23 @@ $(document).ready ->
       updateView()
     $('#file').change -> reader.readAsText @files[0]
 
+  if BlobBuilder?
+    $('#download').click ->
+      filename = $('#view h1').first().text() or 'untitled'
+      bb = new BlobBuilder
+      bb.append editor.getValue()
+      saveAs bb.getBlob('text/plain;charset=utf-8'), filename+'.md'
+  else
+    $('#download').hide()
+
   $('#toggleToc').click ->
     updateToc()
     $('#toc').toggleClass('hidden')
+
+  $('#toggleIndex').click ->
+    updateIndex() if $('#view .index').length is 0
+    $('#view-wrap').toggleClass('indexed')
+
   editor = CodeMirror.fromTextArea $('#input-md')[0],
     mode: 'gfm'
     theme: 'neat'

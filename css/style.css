@@ -14,6 +14,24 @@ a::selection{background:rgba(255,255,0,0.3);color:#0645ad}
   height: 0;
 }
 
+.right {
+  float: right;
+}
+
+.btn {
+  display: inline-block;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.index {
+  display: none;
+}
+
+.indexed .index {
+  display: inline;
+}
+
 textarea:focus, input:focus {
     outline: none;
 }
@@ -49,7 +67,7 @@ body {
   bottom: 0;
 }
 
-#input-md, #input-css {
+#input-md {
   padding: 0;
   border: none;
   resize: none;
@@ -96,6 +114,7 @@ body {
 #toc-wrap {
   margin: 1em;
   padding: 1em;
+  min-height: 24px;
   background-color: #f0f0f0;
   border-radius: 4px;
   -moz-border-radius: 4px;
@@ -105,11 +124,11 @@ body {
   font-size: 0.6em;
   max-height: 720px;
   overflow: hidden;
-  -webkit-transition: max-height 0.3s linear;
-     -moz-transition: max-height 0.3s linear;
-      -ms-transition: max-height 0.3s linear;
-       -o-transition: max-height 0.3s linear;
-          transition: max-height 0.3s linear;
+  -webkit-transition: max-height 0.5s ease-in-out;
+     -moz-transition: max-height 0.5s ease-in-out;
+      -ms-transition: max-height 0.5s ease-in-out;
+       -o-transition: max-height 0.5s ease-in-out;
+          transition: max-height 0.5s ease-in-out;
 }
 #toc.hidden {
   display: block;
@@ -155,6 +174,13 @@ body {
     bottom: auto !important;
   }
   #controls, #input-wrap {
+    display: none !important;
+  }
+  #toc-wrap {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .btn {
     display: none !important;
   }
 }

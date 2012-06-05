@@ -31,13 +31,22 @@ $.fn.number = ->
     t = h.tagName
     count t
     $(h).attr 'data-number', num t if t not in ['OL', 'UL']
+  $(@)
 
-$.fn.generateToc = ->
-  '<ul>' + (for e, i in $('[data-number]', @)
-    numbers = $(e).attr('data-number').split(',')
+$.fn.index = ->
+  for e in $('[data-number]', @)
+    $(e).prepend """
+                 <span class="index">
+                 #{$(e).attr('data-number').split(',').join('. ')}. 
+                 </span>
+                 """
+  $(@)
+
+$.fn.toc = ->
+  '<ul>' + (for e in $('H1,H2,H3,H4,H5,H6', @)
     """
     <li><a href="##{e.id}"><#{e.tagName}>
-      #{numbers.join '. '}. #{e.textContent or e.innerText}
+    #{e.innerHTML}
     </#{e.tagName}></a></li>
     """
   ).join('') + '</ul>'
