@@ -41,6 +41,9 @@
     } else {
       $('#download').hide();
     }
+    $('#print').click(function() {
+      return window.print();
+    });
     $('#toggleToc').click(function() {
       updateToc();
       return $('#toc').toggleClass('hidden');

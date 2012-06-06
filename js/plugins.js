@@ -18,7 +18,7 @@
   };
   $.fn.number = function() {
     var count, h, i, map, num, order, sel, selector, t, _len, _len2, _ref;
-    selector = 'H1,H2,H3,H4,H5,H6,OL,UL,LI';
+    selector = 'H1,H2,H3,H4,H5,H6';
     order = selector.split(',');
     map = {};
     for (i = 0, _len = order.length; i < _len; i++) {

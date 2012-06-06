@@ -28,6 +28,8 @@ $(document).ready ->
   else
     $('#download').hide()
 
+  $('#print').click -> window.print()
+
   $('#toggleToc').click ->
     updateToc()
     $('#toc').toggleClass('hidden')

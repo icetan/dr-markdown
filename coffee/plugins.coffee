@@ -15,7 +15,7 @@ $.fn.getCursorPosition = ->
   pos
 
 $.fn.number = ->
-  selector = 'H1,H2,H3,H4,H5,H6,OL,UL,LI'
+  selector = 'H1,H2,H3,H4,H5,H6' # + ',OL,UL,LI'
   order = selector.split(',')
   map = {}
   map[sel] = {c:0, pos:i} for sel, i in order

@@ -22,6 +22,10 @@ a::selection{background:rgba(255,255,0,0.3);color:#0645ad}
   display: inline-block;
   font-size: 24px;
   cursor: pointer;
+  padding-left: 9px;
+}
+.btn:first-child {
+  padding-left: 0;
 }
 
 .index {
@@ -135,8 +139,11 @@ body {
   visibility: visible;
   max-height: 0;
 }
-#toc, #toc a, #toc a:hover, #toc a:active, #toc a:visited {
+#toc, #toc a, #toc a:active, #toc a:visited {
   color: #666;
+}
+#toc a:hover {
+  color: #333;
 }
 #toc ul {
   margin: 0;
