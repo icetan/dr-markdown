@@ -5,7 +5,7 @@ a::-moz-selection{background:rgba(255,255,0,0.3);color:#0645ad}
 a::selection{background:rgba(255,255,0,0.3);color:#0645ad}
 
 .hidden {
-  display: none !important;
+  display: none;
 }
 
 .clear-fix {
@@ -41,6 +41,7 @@ a.btn:hover {
   padding: 0.5em 1em 0.3em;
   margin-left: 2px;
   font-size: 11px;
+  font-family: Droid Sans;
 }
 .label.active {
   background-color: black;
@@ -85,7 +86,6 @@ html, body {
 body {
   padding: 0;
   margin: 0;
-  font-family: Droid Sans;
 }
 
 #container {
