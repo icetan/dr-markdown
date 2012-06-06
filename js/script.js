@@ -2,7 +2,7 @@
   var markdown;
   markdown = new Showdown.converter();
   $(document).ready(function() {
-    var editor, reader, updateIndex, updateToc, updateView;
+    var editor, updateIndex, updateToc, updateView, _ref;
     updateToc = function() {
       return $('#toc').html($('#view').toc());
     };
@@ -20,16 +20,6 @@
         return updateToc();
       }
     };
-    if (typeof FileReader !== "undefined" && FileReader !== null) {
-      reader = new FileReader;
-      reader.onload = function(e) {
-        editor.setValue(e.target.result);
-        return updateView();
-      };
-      $('#file').change(function() {
-        return reader.readAsText(this.files[0]);
-      });
-    }
     if (typeof BlobBuilder !== "undefined" && BlobBuilder !== null) {
       $('#download').click(function() {
         var bb, filename;
@@ -40,6 +30,17 @@
       });
     } else {
       $('#download').hide();
+    }
+    if (typeof btoa !== "undefined" && btoa !== null) {
+      $('#link-b64').click(function() {
+        var url;
+        url = "" + location.protocol + "//" + location.host + location.pathname + "#?" + (btoa(editor.getValue()));
+        return $('#link-b64-text').val(url).removeClass('hidden').focus().select().blur(function() {
+          return $(this).addClass('hidden');
+        });
+      });
+    } else {
+      $('#link-b64').hide();
     }
     $('#print').click(function() {
       return window.print();
@@ -61,6 +62,9 @@
       lineWrapping: true,
       onChange: updateView
     });
+    if ((typeof atob !== "undefined" && atob !== null) && ((_ref = location.hash) != null ? _ref.substr(0, 2) : void 0) === '#?') {
+      editor.setValue(atob(location.hash.substr(2)));
+    }
     return updateView();
   });
 }).call(this);

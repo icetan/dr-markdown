@@ -12,13 +12,6 @@ $(document).ready ->
       updateIndex() if $('#view-wrap').hasClass('indexed')
       updateToc()
 
-  if FileReader?
-    reader = new FileReader
-    reader.onload = (e) ->
-      editor.setValue e.target.result
-      updateView()
-    $('#file').change -> reader.readAsText @files[0]
-
   if BlobBuilder?
     $('#download').click ->
       filename = $('#view h1').first().text() or 'untitled'
@@ -27,6 +20,16 @@ $(document).ready ->
       saveAs bb.getBlob('text/plain;charset=utf-8'), filename+'.md'
   else
     $('#download').hide()
+
+  if btoa?
+    $('#link-b64').click ->
+      url = "#{location.protocol}//#{location.host}#{location.pathname}#?#{btoa editor.getValue()}"
+      $('#link-b64-text').val(url)
+      .removeClass('hidden')
+      .focus().select()
+      .blur -> $(@).addClass('hidden')
+  else
+    $('#link-b64').hide()
 
   $('#print').click -> window.print()
 
@@ -44,4 +47,8 @@ $(document).ready ->
     lineNumbers: no
     lineWrapping: yes
     onChange: updateView
+
+  if atob? and location.hash?.substr(0,2) is '#?'
+    editor.setValue atob location.hash.substr 2
+
   updateView()

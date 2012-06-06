@@ -28,6 +28,10 @@ a::selection{background:rgba(255,255,0,0.3);color:#0645ad}
   padding-left: 0;
 }
 
+.flying {
+  position: absolute;
+}
+
 .index {
   display: none;
 }
@@ -102,17 +106,9 @@ body {
   z-index: 2;
   border-bottom: 1px solid #ccc;
 }
-#import {
-  overflow: hidden;
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-#file {
-  position: absolute;
-  visibility: hidden;
-  z-index: 5;
+
+#link-b64-text {
+  border: 1px solid #aaa;
 }
 
 #toc-wrap {
