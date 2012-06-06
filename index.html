@@ -13,10 +13,10 @@
   <link href="css/markdown.css" rel="stylesheet"></link>
   <link href="css/style.css" rel="stylesheet"></link>
 
-  <link href="lib/codemirror/codemirror.css" rel="stylesheet"></link>
-  <link href="lib/codemirror/neat.css" rel="stylesheet"></link>
+  <link href="lib/codemirror/css/codemirror.css" rel="stylesheet"></link>
 
-  <link href="lib/font-awesome/css/font-awesome.css" rel="stylesheet"></link>
+  <link href="css/font-awesome/font-awesome.css" rel="stylesheet"></link>
+  <link href="css/droid-sans/droid-sans.css" rel="stylesheet"></link>
 </head>
 
 <body>
@@ -38,9 +38,14 @@
   </div>
 
   <div id="input-wrap">
+    <div id="drag-n-drop-wrap" class="flying hidden">
+      <div id="drag-n-drop-text" class="label large">
+        Drag <i class="icon-file"></i> here
+      </div>
+    </div>
     <div id="modes" class="right flying">
       <a id="mode-gfm" class="btn label active">markdown</a>
-      <a id="mode-css" class="btn label">css</a>
+      <a id="mode-html" class="btn label">html</a>
     </div>
     <textarea id="input-md"></textarea>
   </div>
@@ -64,6 +69,7 @@
   <script src="lib/codemirror/gfm.js" type="text/javascript"></script>
   <script src="lib/codemirror/javascript.js" type="text/javascript"></script>
   <script src="lib/codemirror/css.js" type="text/javascript"></script>
+  <script src="lib/codemirror/htmlmixed.js" type="text/javascript"></script>
   <script src="lib/showdown.js" type="text/javascript"></script>
   <script src="js/plugins.js" type="text/javascript"></script>
   <script src="js/script.js" type="text/javascript"></script>
