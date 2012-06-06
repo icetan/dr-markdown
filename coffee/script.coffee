@@ -41,6 +41,19 @@ $(document).ready ->
     updateIndex() if $('#view .index').length is 0
     $('#view-wrap').toggleClass('indexed')
 
+  $('#input-wrap').mouseover ->
+    $('#modes').removeClass 'hidden'
+  $('#input-wrap').mouseout ->
+    $('#modes').addClass 'hidden'
+  $('#mode-gfm').click ->
+    editor.setOption 'mode', 'gfm'
+    $('#modes .label').removeClass('active')
+    $(@).addClass('active')
+  $('#mode-css').click ->
+    editor.setOption 'mode', 'css'
+    $('#modes .label').removeClass('active')
+    $(@).addClass('active')
+
   editor = CodeMirror.fromTextArea $('#input-md')[0],
     mode: 'gfm'
     theme: 'neat'

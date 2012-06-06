@@ -21,30 +21,35 @@
 
 <body>
   <div id="controls">
-    <div id="toggleIndex" class="btn" title="Toggle header index">
+    <a id="toggleIndex" class="btn" title="Toggle header index">
       <i class="icon-list-ol"></i>
-    </div>
-    <div id="download" class="btn right" title="Download as text file">
+    </a>
+
+    <a id="download" class="btn right" title="Download as text file">
       <i class="icon-download-alt"></i>
-    </div>
-    <div id="link-b64" class="btn right" title="Copy serialized link to clipboard">
+    </a>
+    <a id="link-b64" class="btn right" title="Copy serialized link to clipboard">
       <i class="icon-link"></i>
       <input type="text" id="link-b64-text" class="flying hidden">
-    </div>
-    <div id="print" class="btn right" title="Print formated document">
+    </a>
+    <a id="print" class="btn right" title="Print formated document">
       <i class="icon-print"></i>
-    </div>
+    </a>
   </div>
 
   <div id="input-wrap">
+    <div id="modes" class="right flying">
+      <a id="mode-gfm" class="btn label active">markdown</a>
+      <a id="mode-css" class="btn label">css</a>
+    </div>
     <textarea id="input-md"></textarea>
   </div>
 
   <div id="view-wrap">
     <div id="toc-wrap">
-      <div id="toggleToc" class="btn right" title="Toggle table of content">
+      <a id="toggleToc" class="btn right" title="Toggle table of content">
         <i class="icon-list"></i>
-      </div>
+      </a>
       <div id="toc" class="hidden"></div>
     </div>
     <div id="view" class="markdown"></div>

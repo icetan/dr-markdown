@@ -55,6 +55,22 @@
       }
       return $('#view-wrap').toggleClass('indexed');
     });
+    $('#input-wrap').mouseover(function() {
+      return $('#modes').removeClass('hidden');
+    });
+    $('#input-wrap').mouseout(function() {
+      return $('#modes').addClass('hidden');
+    });
+    $('#mode-gfm').click(function() {
+      editor.setOption('mode', 'gfm');
+      $('#modes .label').removeClass('active');
+      return $(this).addClass('active');
+    });
+    $('#mode-css').click(function() {
+      editor.setOption('mode', 'css');
+      $('#modes .label').removeClass('active');
+      return $(this).addClass('active');
+    });
     editor = CodeMirror.fromTextArea($('#input-md')[0], {
       mode: 'gfm',
       theme: 'neat',
