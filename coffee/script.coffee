@@ -1,11 +1,32 @@
 markdown = new Showdown.converter()
 
-$(document).ready ->
-  compress = -> base64.encode lzw_encode editor.getValue()
-  decompress = (b64) -> editor.setValue lzw_decode base64.decode b64
+kvpToDict = (d, kvp) -> d[kvp[0]] = (if kvp[1]? then kvp[1] else true)
 
-  serializeToUrl = ->
-    "#{location.protocol}//#{location.host}#{location.pathname}#?#{compress()}"
+compress = (data) -> base64.encode lzw_encode data
+decompress = (b64) -> lzw_decode base64.decode b64
+
+parseState = (hash) ->
+  map = {}
+  pos =  hash.indexOf ';'
+  if pos is -1
+    state = hash.substring 1
+  else
+    state = hash.substring 1, pos
+    data = hash.substring pos+1
+  kvpToDict map, kvp.split '=' for kvp in state.split ','
+  [map, data or '']
+
+generateState = (map, data) ->
+  state = for k, v of map when v isnt false
+    if not v? or v is true then k else k+'='+v
+  "##{state.join ','};#{data}"
+
+$(document).ready ->
+  state = {}
+  compressCache = ''
+  compressFromEditor = ->
+    compressCache or (compressCache = compress editor.getValue())
+  decompressToEditor = (b64) -> editor.setValue decompress b64
 
   docTitle = ->
     v = $('#view')
@@ -13,9 +34,18 @@ $(document).ready ->
     $('.index', e).remove()
     e.text() or 'untitled'
 
-  updateStatus = ->
-    location.hash = '#?'+compress()
-    document.title = "Dr. Markdown - #{docTitle()}"
+  stateHas = (type) -> state[type]? and state[type] isnt false
+  stateSet = (type, val) ->
+    state[type] = val
+    updateStatus yes
+  stateToggle = (type) -> stateSet type, not stateHas type
+
+  saved = yes
+  updateStatus = (force) ->
+    if not saved or force
+      location.hash = generateState state, compressFromEditor()
+      document.title = docTitle()
+      saved = yes
 
   updateToc = -> $('#toc').html $('#view').toc()
 
@@ -24,8 +54,8 @@ $(document).ready ->
   updateView = ->
     v = $('#view')
     v.html markdown.makeHtml editor.getValue()
-    updateIndex() if $('#view-wrap').hasClass('indexed')
-    updateToc() if not $('#toc').hasClass('hidden')
+    updateIndex() if stateHas 'index'
+    updateToc() if stateHas 'toc'
 
   if BlobBuilder?
     $('#download').click ->
@@ -36,27 +66,38 @@ $(document).ready ->
     $('#download').hide()
 
   $('#link-b64').click ->
-    $('#link-b64-text').val(serializeToUrl())
+    updateStatus()
+    $('#link-b64-text').val(location.href)
     .removeClass('hidden')
     .focus().select()
     .blur -> $(@).addClass('hidden')
 
   $('#print').click -> window.print()
 
-  $('#toggleToc').click ->
-    updateToc()
-    $('#toc').toggleClass('hidden')
+  setToc = (to) ->
+    if to
+      updateToc()
+      $('#toc').removeClass('hidden')
+    else
+      $('#toc').addClass('hidden')
 
-  $('#toggleIndex').click ->
-    if $('#view [data-number]').length is 0
-      updateIndex()
-      updateToc() if not $('#toc').hasClass('hidden')
-    $('#view-wrap').toggleClass('indexed')
+  setIndex = (to) ->
+    if to
+      if $('#view [data-number]').length is 0
+        updateIndex()
+        updateToc() if hasToc()
+      $('#view-wrap').addClass('indexed')
+    else
+      $('#view-wrap').removeClass('indexed')
 
-  $('#input-wrap').mouseover ->
-    $('#modes').removeClass 'hidden'
-  $('#input-wrap').mouseout ->
-    $('#modes').addClass 'hidden'
+  $('#toggleToc').click -> stateToggle 'toc'
+  $('#toggleIndex').click -> stateToggle 'index'
+
+  $('#input-wrap').mouseover -> $('#modes').removeClass 'hidden'
+  $('#input-wrap').mouseout -> $('#modes').addClass 'hidden'
+  $(document).mouseout (e) ->
+    from = e.relatedTarget or e.toElement
+    updateStatus() if not from or from.nodeName is 'HTML'
   $('#mode-gfm').click ->
     editor.setOption 'mode', 'gfm'
     $('#modes .label').removeClass('active')
@@ -66,19 +107,31 @@ $(document).ready ->
     $('#modes .label').removeClass('active')
     $(@).addClass('active')
 
+  saveTimer = null
   editor = CodeMirror.fromTextArea $('#input-md')[0],
     mode: 'gfm'
     theme: 'default'
     lineNumbers: no
     lineWrapping: yes
-    onChange: updateView
-    onBlur: updateStatus
+    onChange: ->
+      updateView()
+      saved = no
+      compressCache = ''
+      clearTimeout saveTimer
+      saveTimer = setTimeout updateStatus, 5000
     onDragEvent: (editor, event) ->
       $('#drag-n-drop-wrap').remove() if event.type is 'drop'
       false
 
-  if location.hash?.substr(0,2) is '#?'
-    decompress location.hash.substr 2
+  setState = ->
+    [state, data] = parseState location.hash
+    decompressToEditor data if data isnt compressCache
+    setIndex stateHas 'index'
+    setToc stateHas 'toc'
+
+  $(window).bind 'hashchange', setState
+
+  setState()
 
   $('#drag-n-drop-wrap').removeClass 'hidden' if not editor.getValue()
   $('#input-wrap').one 'click', -> $('#drag-n-drop-wrap').remove()

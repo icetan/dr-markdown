@@ -142,7 +142,7 @@ body {
 #modes {
   z-index: 3;
   clear: both;
-  margin: 1em 1em 0;
+  margin: 1em 1em 0 0;
   opacity: 0.8;
   -webkit-transition: opacity 0.1s linear;
      -moz-transition: opacity 0.1s linear;
