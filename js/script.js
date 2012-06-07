@@ -66,13 +66,13 @@
       return $('#toc').toggleClass('hidden');
     });
     $('#toggleIndex').click(function() {
-      $('#view-wrap').toggleClass('indexed');
-      if ($('#view-wrap').hasClass('indexed')) {
+      if ($('#view [data-number]').length === 0) {
         updateIndex();
+        if (!$('#toc').hasClass('hidden')) {
+          updateToc();
+        }
       }
-      if (!$('#toc').hasClass('hidden')) {
-        return updateToc();
-      }
+      return $('#view-wrap').toggleClass('indexed');
     });
     $('#input-wrap').mouseover(function() {
       return $('#modes').removeClass('hidden');

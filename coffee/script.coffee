@@ -48,10 +48,10 @@ $(document).ready ->
     $('#toc').toggleClass('hidden')
 
   $('#toggleIndex').click ->
-    $('#view-wrap').toggleClass('indexed')
-    if $('#view-wrap').hasClass('indexed')
+    if $('#view [data-number]').length is 0
       updateIndex()
       updateToc() if not $('#toc').hasClass('hidden')
+    $('#view-wrap').toggleClass('indexed')
 
   $('#input-wrap').mouseover ->
     $('#modes').removeClass 'hidden'
