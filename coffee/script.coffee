@@ -5,7 +5,8 @@ $(document).ready ->
     "#{location.protocol}//#{location.host}#{location.pathname}#?#{btoa editor.getValue()}"
 
   docTitle = ->
-    e = $('<div></div>').append $('#view h1').first().html()
+    v = $('#view')
+    e = $('<div></div>').append $('h1,h2,h3', v).first().html()
     $('.index', e).remove()
     e.text() or 'untitled'
 
