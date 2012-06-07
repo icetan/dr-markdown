@@ -1,8 +1,11 @@
 markdown = new Showdown.converter()
 
 $(document).ready ->
+  compress = -> base64.encode lzw_encode editor.getValue()
+  decompress = (b64) -> editor.setValue lzw_decode base64.decode b64
+
   serializeToUrl = ->
-    "#{location.protocol}//#{location.host}#{location.pathname}#?#{btoa editor.getValue()}"
+    "#{location.protocol}//#{location.host}#{location.pathname}#?#{compress()}"
 
   docTitle = ->
     v = $('#view')
@@ -11,7 +14,7 @@ $(document).ready ->
     e.text() or 'untitled'
 
   updateStatus = ->
-    location.hash = '#?'+btoa editor.getValue() if btoa?
+    location.hash = '#?'+compress()
     document.title = "Dr. Markdown - #{docTitle()}"
 
   updateToc = -> $('#toc').html $('#view').toc()
@@ -33,14 +36,11 @@ $(document).ready ->
   else
     $('#download').hide()
 
-  if btoa?
-    $('#link-b64').click ->
-      $('#link-b64-text').val(serializeToUrl())
-      .removeClass('hidden')
-      .focus().select()
-      .blur -> $(@).addClass('hidden')
-  else
-    $('#link-b64').hide()
+  $('#link-b64').click ->
+    $('#link-b64-text').val(serializeToUrl())
+    .removeClass('hidden')
+    .focus().select()
+    .blur -> $(@).addClass('hidden')
 
   $('#print').click -> window.print()
 
@@ -76,8 +76,8 @@ $(document).ready ->
       $('#drag-n-drop-wrap').remove() if event.type is 'drop'
       false
 
-  if atob? and location.hash?.substr(0,2) is '#?'
-    editor.setValue atob location.hash.substr 2
+  if location.hash?.substr(0,2) is '#?'
+    decompress location.hash.substr 2
 
   $('#drag-n-drop-wrap').removeClass 'hidden' if not editor.getValue()
   $('#input-wrap').one 'click', -> $('#drag-n-drop-wrap').remove()
