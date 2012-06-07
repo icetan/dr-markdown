@@ -36,10 +36,10 @@
       var v;
       v = $('#view');
       v.html(markdown.makeHtml(editor.getValue()));
+      if ($('#view-wrap').hasClass('indexed')) {
+        updateIndex();
+      }
       if (!$('#toc').hasClass('hidden')) {
-        if ($('#view-wrap').hasClass('indexed')) {
-          updateIndex();
-        }
         return updateToc();
       }
     };
@@ -66,10 +66,13 @@
       return $('#toc').toggleClass('hidden');
     });
     $('#toggleIndex').click(function() {
-      if ($('#view .index').length === 0) {
+      $('#view-wrap').toggleClass('indexed');
+      if ($('#view-wrap').hasClass('indexed')) {
         updateIndex();
       }
-      return $('#view-wrap').toggleClass('indexed');
+      if (!$('#toc').hasClass('hidden')) {
+        return updateToc();
+      }
     });
     $('#input-wrap').mouseover(function() {
       return $('#modes').removeClass('hidden');

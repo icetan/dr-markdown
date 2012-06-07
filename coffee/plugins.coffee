@@ -16,6 +16,7 @@ $.fn.getCursorPosition = ->
 
 $.fn.number = ->
   selector = 'H1,H2,H3,H4,H5,H6' # + ',OL,UL,LI'
+  elems = []
   order = selector.split(',')
   map = {}
   map[sel] = {c:0, pos:i} for sel, i in order
@@ -27,10 +28,19 @@ $.fn.number = ->
     e = map[sel]
     e.c++
     (map[order[i]].c = 0 for i in [e.pos+1...order.length])
-  for h, i in $(selector, @)
-    t = h.tagName
-    count t
-    $(h).attr 'data-number', num t if t not in ['OL', 'UL']
+  reset = (clear) ->
+    elems = [] if clear
+    obj.c = 0 for sel,obj of map
+  for h, i in $('[data-number-reset],[data-number-clear],'+selector, @)
+    if h.hasAttribute 'data-number-reset'
+      reset()
+    else if h.hasAttribute 'data-number-clear'
+      reset true
+    else
+      t = h.tagName
+      count t
+      elems.push [h, num t] if t not in ['OL', 'UL']
+  h.setAttribute 'data-number', n for [h, n] in elems
   $(@)
 
 $.fn.index = ->

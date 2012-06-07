@@ -21,8 +21,9 @@
   };
 
   $.fn.number = function() {
-    var count, h, i, map, num, order, sel, selector, t, _i, _j, _len, _len1, _ref;
+    var count, elems, h, i, map, n, num, order, reset, sel, selector, t, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
     selector = 'H1,H2,H3,H4,H5,H6';
+    elems = [];
     order = selector.split(',');
     map = {};
     for (i = _i = 0, _len = order.length; _i < _len; i = ++_i) {
@@ -55,14 +56,36 @@
       }
       return _results;
     };
-    _ref = $(selector, this);
+    reset = function(clear) {
+      var obj, sel, _results;
+      if (clear) {
+        elems = [];
+      }
+      _results = [];
+      for (sel in map) {
+        obj = map[sel];
+        _results.push(obj.c = 0);
+      }
+      return _results;
+    };
+    _ref = $('[data-number-reset],[data-number-clear],' + selector, this);
     for (i = _j = 0, _len1 = _ref.length; _j < _len1; i = ++_j) {
       h = _ref[i];
-      t = h.tagName;
-      count(t);
-      if (t !== 'OL' && t !== 'UL') {
-        $(h).attr('data-number', num(t));
+      if (h.hasAttribute('data-number-reset')) {
+        reset();
+      } else if (h.hasAttribute('data-number-clear')) {
+        reset(true);
+      } else {
+        t = h.tagName;
+        count(t);
+        if (t !== 'OL' && t !== 'UL') {
+          elems.push([h, num(t)]);
+        }
       }
+    }
+    for (_k = 0, _len2 = elems.length; _k < _len2; _k++) {
+      _ref1 = elems[_k], h = _ref1[0], n = _ref1[1];
+      h.setAttribute('data-number', n);
     }
     return $(this);
   };

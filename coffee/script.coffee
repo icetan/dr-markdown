@@ -24,9 +24,8 @@ $(document).ready ->
   updateView = ->
     v = $('#view')
     v.html markdown.makeHtml editor.getValue()
-    if not $('#toc').hasClass('hidden')
-      updateIndex() if $('#view-wrap').hasClass('indexed')
-      updateToc()
+    updateIndex() if $('#view-wrap').hasClass('indexed')
+    updateToc() if not $('#toc').hasClass('hidden')
 
   if BlobBuilder?
     $('#download').click ->
@@ -49,8 +48,10 @@ $(document).ready ->
     $('#toc').toggleClass('hidden')
 
   $('#toggleIndex').click ->
-    updateIndex() if $('#view .index').length is 0
     $('#view-wrap').toggleClass('indexed')
+    if $('#view-wrap').hasClass('indexed')
+      updateIndex()
+      updateToc() if not $('#toc').hasClass('hidden')
 
   $('#input-wrap').mouseover ->
     $('#modes').removeClass 'hidden'
