@@ -5,7 +5,6 @@
   line-height: 1.5em;
   padding: 1em;
   margin: auto;
-  max-width: 42em;
   background: #fefefe;
 }
 .markdown a {
@@ -134,6 +133,11 @@
 }
 .markdown li p:last-child {
   margin: 0;
+}
+.markdown li > strong:first-child,
+.markdown li > em:first-child {
+  min-width: 10em;
+  display: inline-block;
 }
 .markdown dd {
   margin: 0 0 0 2em;
