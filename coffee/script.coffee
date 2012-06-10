@@ -85,7 +85,7 @@ $(document).ready ->
     if to
       if $('#view [data-number]').length is 0
         updateIndex()
-        updateToc() if hasToc()
+        updateToc() if stateHas 'toc'
       $('#view-wrap').addClass('indexed')
     else
       $('#view-wrap').removeClass('indexed')

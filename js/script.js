@@ -125,7 +125,7 @@
       if (to) {
         if ($('#view [data-number]').length === 0) {
           updateIndex();
-          if (hasToc()) {
+          if (stateHas('toc')) {
             updateToc();
           }
         }
