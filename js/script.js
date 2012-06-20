@@ -1,57 +1,19 @@
 (function() {
-  var compress, decompress, generateState, kvpToDict, markdown, parseState;
+  var compress, decompress, markdown;
   markdown = new Showdown.converter();
-  kvpToDict = function(d, kvp) {
-    return d[kvp[0]] = (kvp[1] != null ? kvp[1] : true);
-  };
   compress = function(data) {
     return base64.encode(lzw_encode(data));
   };
   decompress = function(b64) {
     return lzw_decode(base64.decode(b64));
   };
-  parseState = function(hash) {
-    var data, kvp, map, pos, state, _i, _len, _ref;
-    map = {};
-    pos = hash.indexOf(';');
-    if (pos === -1) {
-      state = hash.substring(1);
-    } else {
-      state = hash.substring(1, pos);
-      data = hash.substring(pos + 1);
-    }
-    _ref = state.split(',');
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      kvp = _ref[_i];
-      kvpToDict(map, kvp.split('='));
-    }
-    return [map, data || ''];
-  };
-  generateState = function(map, data) {
-    var k, state, v;
-    state = (function() {
-      var _results;
-      _results = [];
-      for (k in map) {
-        v = map[k];
-        if (v !== false) {
-          _results.push(!(v != null) || v === true ? k : k + '=' + v);
-        }
-      }
-      return _results;
-    })();
-    return "#" + (state.join(',')) + ";" + data;
-  };
   $(document).ready(function() {
-    var compressCache, compressFromEditor, decompressToEditor, docTitle, editor, saveTimer, saved, setIndex, setState, setToc, state, stateHas, stateSet, stateToggle, updateIndex, updateStatus, updateToc, updateView;
-    state = {};
+    var compressCache, docTitle, editor, saveTimer, saved, setIndex, setState, setToc, state, updateIndex, updateStatus, updateToc, updateView;
+    state = new State;
+    state.on('change', function() {
+      return updateStatus(true);
+    });
     compressCache = '';
-    compressFromEditor = function() {
-      return compressCache || (compressCache = compress(editor.getValue()));
-    };
-    decompressToEditor = function(b64) {
-      return editor.setValue(decompress(b64));
-    };
     docTitle = function() {
       var e, v;
       v = $('#view');
@@ -59,20 +21,12 @@
       $('.index', e).remove();
       return e.text() || 'untitled';
     };
-    stateHas = function(type) {
-      return (state[type] != null) && state[type] !== false;
-    };
-    stateSet = function(type, val) {
-      state[type] = val;
-      return updateStatus(true);
-    };
-    stateToggle = function(type) {
-      return stateSet(type, !stateHas(type));
-    };
     saved = true;
     updateStatus = function(force) {
       if (!saved || force) {
-        location.hash = generateState(state, compressFromEditor());
+        state.generateHash('base64', editor.getValue(), function(hash) {
+          return location.hash = hash;
+        });
         document.title = docTitle();
         return saved = true;
       }
@@ -87,10 +41,10 @@
       var v;
       v = $('#view');
       v.html(markdown.makeHtml(editor.getValue()));
-      if (stateHas('index')) {
+      if (state.has('index')) {
         updateIndex();
       }
-      if (stateHas('toc')) {
+      if (state.has('toc')) {
         return updateToc();
       }
     };
@@ -125,7 +79,7 @@
       if (to) {
         if ($('#view [data-number]').length === 0) {
           updateIndex();
-          if (stateHas('toc')) {
+          if (state.has('toc')) {
             updateToc();
           }
         }
@@ -135,10 +89,10 @@
       }
     };
     $('#toggleToc').click(function() {
-      return stateToggle('toc');
+      return state.toggle('toc');
     });
     $('#toggleIndex').click(function() {
-      return stateToggle('index');
+      return state.toggle('index');
     });
     $('#input-wrap').mouseover(function() {
       return $('#modes').removeClass('hidden');
@@ -164,7 +118,7 @@
       return $(this).addClass('active');
     });
     saveTimer = null;
-    editor = CodeMirror.fromTextArea($('#input-md')[0], {
+    window.editor = editor = CodeMirror.fromTextArea($('#input-md')[0], {
       mode: 'gfm',
       theme: 'default',
       lineNumbers: false,
@@ -184,13 +138,13 @@
       }
     });
     setState = function() {
-      var data, _ref;
-      _ref = parseState(location.hash), state = _ref[0], data = _ref[1];
-      if (data !== compressCache) {
-        decompressToEditor(data);
-      }
-      setIndex(stateHas('index'));
-      return setToc(stateHas('toc'));
+      return state.parseHash(location.hash, function(data) {
+        if ((data != null) && data !== compressCache) {
+          editor.setValue(data);
+        }
+        setIndex(state.has('index'));
+        return setToc(state.has('toc'));
+      });
     };
     $(window).bind('hashchange', setState);
     setState();

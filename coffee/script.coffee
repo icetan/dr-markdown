@@ -1,32 +1,16 @@
 markdown = new Showdown.converter()
 
-kvpToDict = (d, kvp) -> d[kvp[0]] = (if kvp[1]? then kvp[1] else true)
-
 compress = (data) -> base64.encode lzw_encode data
 decompress = (b64) -> lzw_decode base64.decode b64
 
-parseState = (hash) ->
-  map = {}
-  pos =  hash.indexOf ';'
-  if pos is -1
-    state = hash.substring 1
-  else
-    state = hash.substring 1, pos
-    data = hash.substring pos+1
-  kvpToDict map, kvp.split '=' for kvp in state.split ','
-  [map, data or '']
-
-generateState = (map, data) ->
-  state = for k, v of map when v isnt false
-    if not v? or v is true then k else k+'='+v
-  "##{state.join ','};#{data}"
-
 $(document).ready ->
-  state = {}
+  state = new State
+  state.on 'change', -> updateStatus yes
+
   compressCache = ''
-  compressFromEditor = ->
-    compressCache or (compressCache = compress editor.getValue())
-  decompressToEditor = (b64) -> editor.setValue decompress b64
+  #compressFromEditor = ->
+  #  compressCache or (compressCache = compress editor.getValue())
+  #decompressToEditor = (b64) -> editor.setValue decompress b64
 
   docTitle = ->
     v = $('#view')
@@ -34,16 +18,11 @@ $(document).ready ->
     $('.index', e).remove()
     e.text() or 'untitled'
 
-  stateHas = (type) -> state[type]? and state[type] isnt false
-  stateSet = (type, val) ->
-    state[type] = val
-    updateStatus yes
-  stateToggle = (type) -> stateSet type, not stateHas type
-
   saved = yes
   updateStatus = (force) ->
     if not saved or force
-      location.hash = generateState state, compressFromEditor()
+      state.generateHash 'base64', editor.getValue(), (hash) ->
+        location.hash = hash
       document.title = docTitle()
       saved = yes
 
@@ -54,8 +33,8 @@ $(document).ready ->
   updateView = ->
     v = $('#view')
     v.html markdown.makeHtml editor.getValue()
-    updateIndex() if stateHas 'index'
-    updateToc() if stateHas 'toc'
+    updateIndex() if state.has 'index'
+    updateToc() if state.has 'toc'
 
   if BlobBuilder?
     $('#download').click ->
@@ -85,13 +64,13 @@ $(document).ready ->
     if to
       if $('#view [data-number]').length is 0
         updateIndex()
-        updateToc() if stateHas 'toc'
+        updateToc() if state.has 'toc'
       $('#view-wrap').addClass('indexed')
     else
       $('#view-wrap').removeClass('indexed')
 
-  $('#toggleToc').click -> stateToggle 'toc'
-  $('#toggleIndex').click -> stateToggle 'index'
+  $('#toggleToc').click -> state.toggle 'toc'
+  $('#toggleIndex').click -> state.toggle 'index'
 
   $('#input-wrap').mouseover -> $('#modes').removeClass 'hidden'
   $('#input-wrap').mouseout -> $('#modes').addClass 'hidden'
@@ -108,7 +87,7 @@ $(document).ready ->
     $(@).addClass('active')
 
   saveTimer = null
-  editor = CodeMirror.fromTextArea $('#input-md')[0],
+  window.editor = editor = CodeMirror.fromTextArea $('#input-md')[0],
     mode: 'gfm'
     theme: 'default'
     lineNumbers: no
@@ -124,10 +103,10 @@ $(document).ready ->
       false
 
   setState = ->
-    [state, data] = parseState location.hash
-    decompressToEditor data if data isnt compressCache
-    setIndex stateHas 'index'
-    setToc stateHas 'toc'
+    state.parseHash location.hash, (data) ->
+      editor.setValue data if data? and data isnt compressCache
+      setIndex state.has 'index'
+      setToc state.has 'toc'
 
   $(window).bind 'hashchange', setState
 
