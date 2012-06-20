@@ -1,22 +1,33 @@
 kvpToDict = (d, kvp) -> d[kvp[0]] = (if kvp[1]? then kvp[1] else true)
 
-class State
+class @State extends EventEmitter
   constructor: ->
-    @state
-    @dataParsers = {
+    super()
+    @state =
+      toc: false
+      index: false
+    @dataParsers =
       lzw:
         encode: (data, fn) -> fn base64.encode lzw_encode data
         decode: (data, fn) -> fn lzw_decode base64.decode data
-    }
+      base64:
+        encode: (data, fn) -> fn base64.encode data
+        decode: (data, fn) -> fn base64.decode data
 
   parseState: (str) ->
-    map = {}
-    kvpToDict map, kvp.split '=' for kvp in str.split ','
-    map
+    kvpToDict @state, kvp.split '=' for kvp in str.split ',' when kvp isnt ''
 
-  parseData: (str, fn) ->
+  generateState: ->
+    (for k, v of @state when v? and v isnt false
+      if v is true then k else k+'='+v).join ','
+
+  decodeData: (str, fn) ->
     [type, data] = str.split ':'
     @dataParsers[type].decode data, fn
+
+  encodeData: (type, data, fn) ->
+    @dataParsers[type].encode data, (data) ->
+      fn type+':'+data
 
   parseHash: (hash, fn) ->
     hash = hash.substring 1 if hash.charAt 0 is '#'
@@ -26,21 +37,19 @@ class State
     else # state and data
       state = hash.substring 0, pos
       data = hash.substring pos+1
-    map = @parseState state
-    if data
-      @parseData data, (data) -> fn map, data
+    @parseState state
+    if data?
+      @decodeData data, (data) -> fn data
     else
-      fn map
+      fn()
 
-  generateHash: (map, type, data, fn) ->
-    state = for k, v of map when v isnt false
-      if not v? or v is true then k else k+'='+v
-    if type and data
-      @dataParsers[type].encode data, (data) ->
-        fn "##{state.join ','};#{type}:#{data}"
+  generateHash: (type, data, fn) ->
+    if type? and data?
+      @encodeData type, data, (str) =>
+        fn '#'+@generateState()+';'+str
     else
-      fn "##{state.join ','}"
+      fn '#'+@generateState()
 
-  has: (type) -> @state[type]? and state[type] isnt false
+  has: (type) -> @state[type]? and @state[type] isnt false
   set: (type, val) -> @state[type] = val; @emit 'change', type, val
   toggle: (type) -> @set type, not @has type
