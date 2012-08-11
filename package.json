@@ -1,0 +1,22 @@
+{
+    "name": "dr-markdown"
+  , "version": "0.0.1"
+  , "author": {
+      "name": "Christopher Fredén"
+  }
+  , "description": "Markdown editor based on CodeMirror and Showdown"
+  , "repository": {
+      "type": "git"
+    , "url": "https://github.com/icetan/dr-markdown.git"
+  }
+  , "licenses": [
+      { "type": "MIT" }
+  ]
+  , "dependencies": {
+      "showdown": "~0.2.0"
+  }
+  , "scripts": {
+      "install": "boiler index.js > script.js"
+  }
+  , "main": "./index.js"
+}

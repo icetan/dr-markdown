@@ -1,4 +1,5 @@
-$ = jQuery
+$ = require '../lib/zepto'
+
 $.fn.getCursorPosition = ->
   pos = 0
   el = $(@).get 0

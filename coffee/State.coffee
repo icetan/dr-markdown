@@ -1,18 +1,54 @@
+EventEmitter = require('../lib/events').EventEmitter
+base64 = require '../lib/base64'
+lzw = require '../lib/lzw'
+
+extend = (r={}, d) ->
+  r[k] = v for k, v of d
+  r
 kvpToDict = (d, kvp) -> d[kvp[0]] = (if kvp[1]? then kvp[1] else true)
 
-class @State extends EventEmitter
+class @Storage
+
   constructor: ->
+    @id ?= new Id
+    @version ?= 0
+
+  local:
+    save: (data, fn) =>
+      @version += 1 if @id of localStorage
+      localStorage[@id] = data
+      fn @id, @version
+    get: (@id, fn) =>
+      {data, @version} = localStorage[@id]
+      fn data, @version
+
+class @State extends EventEmitter
+  constructor: (coders={}) ->
     super()
+    extend @coders, coders
     @state =
       toc: false
       index: false
-    @dataParsers =
-      lzw:
-        encode: (data, fn) -> fn base64.encode lzw_encode data
-        decode: (data, fn) -> fn lzw_decode base64.decode data
-      base64:
-        encode: (data, fn) -> fn base64.encode data
-        decode: (data, fn) -> fn base64.decode data
+    @start()
+
+  coders:
+    lzw:
+      encode: (data, fn) -> fn base64.encode lzw.encode data
+      decode: (data, fn) -> fn lzw.decode base64.decode data
+    base64:
+      encode: (data, fn) -> fn base64.encode data
+      decode: (data, fn) -> fn base64.decode data
+
+  encodeData: (type, data, fn) ->
+    @coders[type].encode data, (data) -> fn type+';'+data
+
+  decodeData: (data, fn) ->
+    [type, data] = data.split ';', 2
+    @coders[type].decode data, fn
+
+  start: ->
+    {protocol, host, pathname} = window.location
+    @baseUrl = protocol+'//'+host+pathname
 
   parseState: (str) ->
     kvpToDict @state, kvp.split '=' for kvp in str.split ',' when kvp isnt ''
@@ -21,13 +57,9 @@ class @State extends EventEmitter
     (for k, v of @state when v? and v isnt false
       if v is true then k else k+'='+v).join ','
 
-  decodeData: (str, fn) ->
-    [type, data] = str.split ':'
-    @dataParsers[type].decode data, fn
+  _get: (type, id, fn) -> @storage[type].get id, fn
 
-  encodeData: (type, data, fn) ->
-    @dataParsers[type].encode data, (data) ->
-      fn type+':'+data
+  _save: (type, data, fn) -> @storage[type].save data, fn
 
   parseHash: (hash, fn) ->
     hash = hash.substring 1 if hash.charAt 0 is '#'
@@ -50,6 +82,13 @@ class @State extends EventEmitter
     else
       fn '#'+@generateState()
 
+  replace: ->
+    @_save type, data, (id, version) ->
+      window.history.replaceState {}, '', @baseUrl+type+'/'+id+'/'+version+
+        '#'+generateState()
+
   has: (type) -> @state[type]? and @state[type] isnt false
   set: (type, val) -> @state[type] = val; @emit 'change', type, val
   toggle: (type) -> @set type, not @has type
+
+module.exports = State

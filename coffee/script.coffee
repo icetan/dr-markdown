@@ -1,23 +1,23 @@
+$ = require '../lib/zepto'
+
+Showdown = require 'showdown'
 markdown = new Showdown.converter()
 
-compress = (data) -> base64.encode lzw_encode data
-decompress = (b64) -> lzw_decode base64.decode b64
+base64 = require '../lib/base64'
+lzw = require '../lib/lzw'
 
-$(document).ready ->
+require './unify'
+State = require './State'
+
+module.exports = ->
   state = new State
   state.on 'change', -> updateStatus yes
 
-  compressCache = ''
-  #compressFromEditor = ->
-  #  compressCache or (compressCache = compress editor.getValue())
-  #decompressToEditor = (b64) -> editor.setValue decompress b64
-
   docTitle = ->
     v = $('#view')
-    e = $('<div></div>').append $('h1,h2,h3', v).first().html()
+    e = $('<div></div>').append $('h1,h2,h3', v).first().html() or 'untitled'
     $('.index', e).remove()
-    e.text() or 'untitled'
-
+    e.text()
   saved = yes
   updateStatus = (force) ->
     if not saved or force
@@ -95,7 +95,6 @@ $(document).ready ->
     onChange: ->
       updateView()
       saved = no
-      compressCache = ''
       clearTimeout saveTimer
       saveTimer = setTimeout updateStatus, 5000
     onDragEvent: (editor, event) ->
@@ -104,7 +103,7 @@ $(document).ready ->
 
   setState = ->
     state.parseHash location.hash, (data) ->
-      editor.setValue data if data? and data isnt compressCache
+      editor.setValue data if data? and data isnt editor.getValue()
       setIndex state.has 'index'
       setToc state.has 'toc'
 
