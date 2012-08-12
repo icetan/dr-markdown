@@ -10,7 +10,6 @@
   <!-- Mobile viewport optimized: h5bp.com/viewport -->
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
-  <link href="css/markdown.css" rel="stylesheet"></link>
   <link href="css/style.css" rel="stylesheet"></link>
 
   <link href="lib/codemirror/css/codemirror.css" rel="stylesheet"></link>
@@ -22,16 +21,15 @@
 <body>
   <div id="controls-wrap">
     <div id="controls">
-      <a id="toggleIndex" class="btn" title="Toggle header index">
-        <i class="icon-list-ol"></i>
+      <a id="toggleFull" class="btn" title="Toggle full preview">
+        <i class="icon-fullscreen"></i>
       </a>
-
       <a id="download" class="btn right" title="Download as text file">
         <i class="icon-download-alt"></i>
       </a>
-      <a id="link-b64" class="btn right" title="Copy serialized link to clipboard">
+      <a id="link-b64" class="btn right relative" title="Copy serialized link to clipboard">
         <i class="icon-link"></i>
-        <input type="text" id="link-b64-text" class="flying hidden">
+        <input type="text" id="link-b64-text" class="flying right hidden">
       </a>
       <a id="print" class="btn right" title="Print formated document">
         <i class="icon-print"></i>
@@ -45,7 +43,7 @@
         Drag <i class="icon-file"></i> here
       </div>
     </div>
-    <div id="modes" class="right flying">
+    <div id="modes" class="right flying" style="display:none;">
       <a id="mode-gfm" class="label active">markdown</a>
       <a id="mode-html" class="label">html</a>
     </div>
@@ -54,8 +52,12 @@
 
   <div id="view-wrap">
     <div id="toc-wrap">
+      <i></i>
       <a id="toggleToc" class="btn right" title="Toggle table of content">
         <i class="icon-list"></i>
+      </a>
+      <a id="toggleIndex" class="btn right" title="Toggle header index">
+        <i class="icon-list-ol"></i>
       </a>
       <div id="toc" class="hidden"></div>
     </div>

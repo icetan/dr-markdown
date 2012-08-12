@@ -48,10 +48,12 @@ module.exports = ->
     updateStatus()
     $('#link-b64-text').val(location.href)
     .removeClass('hidden')
-    .focus().select()
+    .focus()#.select()
     .blur -> $(@).addClass('hidden')
 
   $('#print').click -> window.print()
+
+  setFull = (to) -> $('#view-wrap').toggleClass('full', to)
 
   setToc = (to) ->
     if to
@@ -69,6 +71,7 @@ module.exports = ->
     else
       $('#view-wrap').removeClass('indexed')
 
+  $('#toggleFull').click -> state.toggle 'full'
   $('#toggleToc').click -> state.toggle 'toc'
   $('#toggleIndex').click -> state.toggle 'index'
 
@@ -104,6 +107,7 @@ module.exports = ->
   setState = ->
     state.parseHash location.hash, (data) ->
       editor.setValue data if data? and data isnt editor.getValue()
+      setFull state.has 'full'
       setIndex state.has 'index'
       setToc state.has 'toc'
 

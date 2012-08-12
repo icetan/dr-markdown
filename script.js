@@ -3539,7 +3539,7 @@ function(require,exports,module){
   State = require('./State');
 
   module.exports = function() {
-    var docTitle, editor, saveTimer, saved, setIndex, setState, setToc, state, updateIndex, updateStatus, updateToc, updateView;
+    var docTitle, editor, saveTimer, saved, setFull, setIndex, setState, setToc, state, updateIndex, updateStatus, updateToc, updateView;
     state = new State;
     state.on('change', function() {
       return updateStatus(true);
@@ -3590,13 +3590,16 @@ function(require,exports,module){
     }
     $('#link-b64').click(function() {
       updateStatus();
-      return $('#link-b64-text').val(location.href).removeClass('hidden').focus().select().blur(function() {
+      return $('#link-b64-text').val(location.href).removeClass('hidden').focus().blur(function() {
         return $(this).addClass('hidden');
       });
     });
     $('#print').click(function() {
       return window.print();
     });
+    setFull = function(to) {
+      return $('#view-wrap').toggleClass('full', to);
+    };
     setToc = function(to) {
       if (to) {
         updateToc();
@@ -3618,6 +3621,9 @@ function(require,exports,module){
         return $('#view-wrap').removeClass('indexed');
       }
     };
+    $('#toggleFull').click(function() {
+      return state.toggle('full');
+    });
     $('#toggleToc').click(function() {
       return state.toggle('toc');
     });
@@ -3671,6 +3677,7 @@ function(require,exports,module){
         if ((data != null) && data !== editor.getValue()) {
           editor.setValue(data);
         }
+        setFull(state.has('full'));
         setIndex(state.has('index'));
         return setToc(state.has('toc'));
       });

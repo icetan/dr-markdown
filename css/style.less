@@ -1,0 +1,268 @@
+@import "markdown";
+
+.transition (@params) {
+  -webkit-transition: @params;
+     -moz-transition: @params;
+      -ms-transition: @params;
+       -o-transition: @params;
+          transition: @params;
+}
+
+::-moz-selection{background:rgba(255,255,0,0.3);color:#000}
+::selection{background:rgba(255,255,0,0.3);color:#000}
+
+a::-moz-selection{background:rgba(255,255,0,0.3);color:#0645ad}
+a::selection{background:rgba(255,255,0,0.3);color:#0645ad}
+
+.hidden {
+  display: none;
+}
+
+.clear-fix {
+  clear: both;
+  height: 0;
+}
+
+.right {
+  float: right;
+}
+
+.btn {
+  display: inline-block;
+  font-size: 24px;
+  cursor: pointer;
+  margin-left: 9px;
+  color: #555;
+  text-shadow: 0 -1px white;
+}
+.btn:first-child {
+  margin-left: 0;
+}
+a.btn:hover {
+  color: black;
+}
+
+.label {
+  display: inline-block;
+  border-radius: 18px;
+  -moz-border-radius: 18px;
+  -webkit-border-radius: 18px;
+  background-color: #555;
+  color: white !important;
+  padding: 0.5em 1em 0.3em;
+  margin-left: 2px;
+  font-size: 11px;
+  font-family: Droid Sans;
+}
+.label.active {
+  background-color: black;
+}
+.label.large {
+  font-size: 24px;
+}
+a.label:hover {
+  background-color: #222;
+}
+
+.flying {
+  position: absolute;
+}
+.flying.right {
+  right: 0;
+}
+.relative {
+  position: relative;
+}
+
+.index {
+  display: none;
+}
+
+.indexed .index {
+  display: inline;
+}
+
+textarea:focus, input:focus {
+    outline: none;
+}
+
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #fafafa;
+  font: 12px/1.2 Courier, monospace;
+}
+
+#input-wrap {
+  margin-left: 1em;
+  position: absolute;
+  top: 4em;
+  left: 0;
+  bottom: 0;
+  width: 48em;
+}
+
+#input-md {
+  padding: 0;
+  border: none;
+  resize: none;
+  width: 100%;
+  height: 100%;
+  background: none;
+}
+
+#view-wrap {
+  z-index: 3;
+  background-color: white;
+  position: absolute;
+  top: 0;
+  left: 49em;
+  right: 0;
+  bottom: 0;
+  overflow-y: scroll;
+  -webkit-box-shadow: -2px 0 30px 0 rgba(0, 0, 0, 0.25);
+     -moz-box-shadow: -2px 0 30px 0 rgba(0, 0, 0, 0.25);
+          box-shadow: -2px 0 30px 0 rgba(0, 0, 0, 0.25);
+  .transition(left 0.5s ease);
+  &.full {
+    left: 3em;
+  }
+}
+
+#view {
+  padding: 2em;
+  margin: auto;
+  max-width: 42em;
+}
+
+#controls-wrap {
+  margin-left: 1em;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 47em;
+}
+
+#controls {
+  border-bottom: 1px solid #ccc;
+  padding: 1em 0;
+  height: 2em;
+}
+
+#modes {
+  z-index: 3;
+  clear: both;
+  margin: 1em 1em 0 0;
+  opacity: 0.8;
+  .transition(opacity 0.1s linear);
+}
+#modes.hidden {
+  display: block;
+  opacity: 0;
+}
+
+#link-b64-text {
+  border: 1px solid #aaa;
+}
+
+#drag-n-drop-wrap {
+  top: 12em;
+  left: 50%;
+}
+#drag-n-drop-text {
+  margin-left: -50%;
+  opacity: 0.3;
+  text-shadow: 0 1px 0 black;
+}
+
+#toc-wrap {
+  margin: 2em 2em 0;
+  padding: 1em;
+  min-height: 24px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+#toc {
+  font-size: 0.6em;
+  max-height: 720px;
+  overflow: hidden;
+  -webkit-transition: max-height 0.5s ease-in-out;
+     -moz-transition: max-height 0.5s ease-in-out;
+      -ms-transition: max-height 0.5s ease-in-out;
+       -o-transition: max-height 0.5s ease-in-out;
+          transition: max-height 0.5s ease-in-out;
+}
+#toc.hidden {
+  display: block;
+  visibility: visible;
+  max-height: 0;
+}
+#toc, #toc a, #toc a:active, #toc a:visited {
+  color: #666;
+}
+#toc a:hover {
+  color: #333;
+}
+#toc ul {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+/* CodeMirror */
+#input-wrap .CodeMirror {
+}
+#input-wrap .CodeMirror,
+#input-wrap .CodeMirror-scroll {
+  height: 100%;
+}
+#input-wrap .CodeMirror-lines {
+  padding: 1em 1em 1em 0;
+}
+#input-wrap .CodeMirror-focused div.CodeMirror-selected {
+  background: rgba(255, 255, 0, 0.3);
+}
+
+/* Print media */
+@media print {
+  html, body {
+    height: auto !important;
+    overflow: auto !important;
+  }
+  #view-wrap {
+    width: auto !important;
+    overflow: auto !important;
+    position: relative !important;
+    bottom: auto !important;
+    left: 0;
+  }
+  #view {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: auto !important;
+  }
+  #controls, #input-wrap {
+    display: none !important;
+  }
+  #toc-wrap {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .btn {
+    display: none !important;
+  }
+}
