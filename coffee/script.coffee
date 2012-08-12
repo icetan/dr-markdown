@@ -31,10 +31,23 @@ module.exports = ->
   updateIndex = -> $('#view').number().index()
 
   updateView = ->
+    cline = editor.getCursor().line
+    md = editor.getValue().split '\n'
+    md[cline] += '<span id="cursor"></span>'
+    md = md.join '\n'
     v = $('#view')
-    v.html markdown.makeHtml editor.getValue()
+    v.html markdown.makeHtml md
     updateIndex() if state.has 'index'
     updateToc() if state.has 'toc'
+    viewWrap = $('#view-wrap')[0]
+    scrollTop = viewWrap.scrollTop
+    viewHeight = viewWrap.offsetHeight
+    cursorSpan = $('#cursor')[0]
+    cursorTop = cursorSpan.offsetTop
+    cursorHeight = cursorSpan.offsetHeight
+    if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight - cursorHeight
+      viewWrap.scrollTop = cursorTop - viewHeight/2
+
 
   if BlobBuilder?
     $('#download').click ->
@@ -48,7 +61,7 @@ module.exports = ->
     updateStatus()
     $('#link-b64-text').val(location.href)
     .removeClass('hidden')
-    .focus()#.select()
+    .focus()##.select()
     .blur -> $(@).addClass('hidden')
 
   $('#print').click -> window.print()
@@ -90,7 +103,7 @@ module.exports = ->
     $(@).addClass('active')
 
   saveTimer = null
-  window.editor = editor = CodeMirror.fromTextArea $('#input-md')[0],
+  editor = CodeMirror.fromTextArea $('#input-md')[0],
     mode: 'gfm'
     theme: 'default'
     lineNumbers: no

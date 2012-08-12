@@ -3568,14 +3568,27 @@ function(require,exports,module){
       return $('#view').number().index();
     };
     updateView = function() {
-      var v;
+      var cline, cursorHeight, cursorSpan, cursorTop, md, scrollTop, v, viewHeight, viewWrap;
+      cline = editor.getCursor().line;
+      md = editor.getValue().split('\n');
+      md[cline] += '<span id="cursor"></span>';
+      md = md.join('\n');
       v = $('#view');
-      v.html(markdown.makeHtml(editor.getValue()));
+      v.html(markdown.makeHtml(md));
       if (state.has('index')) {
         updateIndex();
       }
       if (state.has('toc')) {
-        return updateToc();
+        updateToc();
+      }
+      viewWrap = $('#view-wrap')[0];
+      scrollTop = viewWrap.scrollTop;
+      viewHeight = viewWrap.offsetHeight;
+      cursorSpan = $('#cursor')[0];
+      cursorTop = cursorSpan.offsetTop;
+      cursorHeight = cursorSpan.offsetHeight;
+      if (cursorTop < scrollTop || cursorTop > scrollTop + viewHeight - cursorHeight) {
+        return viewWrap.scrollTop = cursorTop - viewHeight / 2;
       }
     };
     if (typeof BlobBuilder !== "undefined" && BlobBuilder !== null) {
@@ -3654,7 +3667,7 @@ function(require,exports,module){
       return $(this).addClass('active');
     });
     saveTimer = null;
-    window.editor = editor = CodeMirror.fromTextArea($('#input-md')[0], {
+    editor = CodeMirror.fromTextArea($('#input-md')[0], {
       mode: 'gfm',
       theme: 'default',
       lineNumbers: false,
