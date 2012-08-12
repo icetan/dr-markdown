@@ -12,11 +12,16 @@
   , "licenses": [
       { "type": "MIT" }
   ]
-  , "dependencies": {
+  , "devDependencies": {
       "showdown": "~0.2.0"
   }
   , "scripts": {
-      "install": "boiler app.js > script.js"
+      "build": "boiler app.js > script.js"
   }
-  , "main": "./index.js"
+  , "bin": {
+      "dr-markdown": "./bin/dr-markdown"
+  }
+  , "files": [
+      "./bin"
+  ]
 }

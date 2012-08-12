@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 // -*- js -*-
 
-var path = require('path')
-  , fs = require('fs')
+var fs = require('fs')
   , file = process.argv[2]
   ;
 
