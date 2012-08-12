@@ -21,7 +21,4 @@
   , "bin": {
       "dr-markdown": "./bin/dr-markdown"
   }
-  , "files": [
-      "./bin"
-  ]
 }

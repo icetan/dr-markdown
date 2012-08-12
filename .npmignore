@@ -1,0 +1,8 @@
+app.js
+script.js
+index.html
+coffee/
+css/
+lib/
+.DS_Store
+.git*
