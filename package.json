@@ -16,7 +16,7 @@
       "showdown": "~0.2.0"
   }
   , "scripts": {
-      "install": "boiler index.js > script.js"
+      "install": "boiler app.js > script.js"
   }
   , "main": "./index.js"
 }

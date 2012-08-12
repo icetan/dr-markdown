@@ -3520,7 +3520,7 @@ function(require,exports,module){
 
 });register.call(this,8,{"../lib/zepto":1,"showdown":2,"../lib/base64":3,"../lib/lzw":4,"./unify":5,"./State":7},
 function(require,exports,module){
-// Boiler file: coffee/script.coffee
+// Boiler file: coffee/main.coffee
 (function() {
   var $, Showdown, State, base64, lzw, markdown;
 
@@ -3830,13 +3830,13 @@ function(require,exports,module){
 
 }).call(this);
 
-});register.call(this,11,{"coffee-script":10,"./lib/zepto":1,"./coffee/script":8,"./coffee/plugins":9},
+});register.call(this,11,{"coffee-script":10,"./lib/zepto":1,"./coffee/main":8,"./coffee/plugins":9},
 function(require,exports,module){
-// Boiler file: index.js
+// Boiler file: app.js
 require('coffee-script', true);
 
 var $ = require('./lib/zepto', 'Zepto')
-  , main = require('./coffee/script')
+  , main = require('./coffee/main')
   ;
 require('./coffee/plugins');
 

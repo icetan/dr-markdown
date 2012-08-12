@@ -1,7 +1,7 @@
 require('coffee-script', true);
 
 var $ = require('./lib/zepto', 'Zepto')
-  , main = require('./coffee/script')
+  , main = require('./coffee/main')
   ;
 require('./coffee/plugins');
 
