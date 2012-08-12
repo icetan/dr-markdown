@@ -11,7 +11,7 @@ function parse (stream) {
   stream.on('data', function (chunk) { data += chunk; });
   stream.on('end', function () {
     var b64 = new Buffer(data).toString('base64');
-    console.log('http://icetan.github.com/dr-markdown#;base64;'+b64);
+    console.log('http://icetan.github.com/dr-markdown#full;base64;'+b64);
   });
 }
 
