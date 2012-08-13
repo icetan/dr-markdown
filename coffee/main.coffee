@@ -30,13 +30,14 @@ module.exports = ->
 
   updateIndex = -> $('#view').number().index()
 
+  cursorToken = '^^^cursor^^^'
   updateView = ->
     cline = editor.getCursor().line
     md = editor.getValue().split '\n'
-    md[cline] += '<span id="cursor"></span>'
+    md[cline] += cursorToken
     md = md.join '\n'
     v = $('#view')
-    v.html markdown.makeHtml md
+    v.html markdown.makeHtml(md).replace(cursorToken, '<span id="cursor"></span>')
     updateIndex() if state.has 'index'
     updateToc() if state.has 'toc'
     viewWrap = $('#view-wrap')[0]

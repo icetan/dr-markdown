@@ -3539,7 +3539,7 @@ function(require,exports,module){
   State = require('./State');
 
   module.exports = function() {
-    var docTitle, editor, saveTimer, saved, setFullInput, setFullView, setIndex, setState, setToc, state, updateIndex, updateStatus, updateToc, updateView;
+    var cursorToken, docTitle, editor, saveTimer, saved, setFullInput, setFullView, setIndex, setState, setToc, state, updateIndex, updateStatus, updateToc, updateView;
     state = new State;
     state.on('change', function() {
       return updateStatus(true);
@@ -3567,14 +3567,15 @@ function(require,exports,module){
     updateIndex = function() {
       return $('#view').number().index();
     };
+    cursorToken = '^^^cursor^^^';
     updateView = function() {
       var cline, cursorHeight, cursorSpan, cursorTop, md, scrollTop, v, viewHeight, viewWrap;
       cline = editor.getCursor().line;
       md = editor.getValue().split('\n');
-      md[cline] += '<span id="cursor"></span>';
+      md[cline] += cursorToken;
       md = md.join('\n');
       v = $('#view');
-      v.html(markdown.makeHtml(md));
+      v.html(markdown.makeHtml(md).replace(cursorToken, '<span id="cursor"></span>'));
       if (state.has('index')) {
         updateIndex();
       }
