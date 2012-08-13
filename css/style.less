@@ -1,3 +1,4 @@
+@import "font-awesome";
 @import "markdown";
 
 .transition (@params) {
@@ -7,12 +8,21 @@
        -o-transition: @params;
           transition: @params;
 }
+.box-shadow (@params) {
+  -webkit-box-shadow: @params;
+     -moz-box-shadow: @params;
+          box-shadow: @params;
+}
 
 ::-moz-selection{background:rgba(255,255,0,0.3);color:#000}
 ::selection{background:rgba(255,255,0,0.3);color:#000}
 
 a::-moz-selection{background:rgba(255,255,0,0.3);color:#0645ad}
 a::selection{background:rgba(255,255,0,0.3);color:#0645ad}
+
+.logo {
+  font-size: 40px;
+}
 
 .hidden {
   display: none;
@@ -66,12 +76,17 @@ a.label:hover {
 
 .flying {
   position: absolute;
+  z-index: 10;
+  &.right {
+    right: 0;
+  }
+  &.relative {
+    position: relative;
+  }
 }
-.flying.right {
-  right: 0;
-}
-.relative {
-  position: relative;
+
+.transparent {
+  opacity: 0 !important;
 }
 
 .index {
@@ -105,12 +120,12 @@ body {
 }
 
 #input-wrap {
-  margin-left: 1em;
   position: absolute;
   top: 4em;
   left: 0;
   bottom: 0;
-  width: 48em;
+  min-width: 0;
+  .transition(min-width .5s ease);
 }
 
 #input-md {
@@ -122,43 +137,80 @@ body {
   background: none;
 }
 
+#expand-input, #expand-view {
+  z-index: 10;
+  opacity: 0.6;
+  .transition(opacity .5s ease);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2em;
+  text-align: center;
+  cursor: pointer;
+  &.right {
+    right: 0;
+  }
+  > * {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    font-size: 32px;
+    display: inline-block;
+    line-height: 0.5em;
+  }
+  &::before {
+    content: '';
+    height: 100%;
+    width: 400px;
+    right: 100%;
+    position: absolute;
+    .box-shadow(0 0 176px -13px black);
+    border-radius: 100%;
+  }
+  &.right::before {
+    left: 100%;
+  }
+}
+
 #view-wrap {
   z-index: 3;
   background-color: white;
   position: absolute;
   top: 0;
-  left: 49em;
+  left: 50em;
   right: 0;
   bottom: 0;
   overflow-y: scroll;
-  -webkit-box-shadow: -2px 0 30px 0 rgba(0, 0, 0, 0.25);
-     -moz-box-shadow: -2px 0 30px 0 rgba(0, 0, 0, 0.25);
-          box-shadow: -2px 0 30px 0 rgba(0, 0, 0, 0.25);
-  .transition(left 0.5s ease);
-  &.full {
-    left: 3em;
-  }
+  overflow-x: hidden;
+  .box-shadow(-2px 0 30px 0 rgba(0, 0, 0, 0.25));
+  .transition(left .5s ease);
 }
 
 #view {
   padding: 2em;
   margin: auto;
-  max-width: 42em;
+  width: 42em;
 }
 
 #controls-wrap {
-  margin-left: 1em;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 2;
-  width: 47em;
+  min-width: 0;
+  .transition(min-width .5s ease);
+  > div {
+    padding: 0 1em 0 2em;
+  }
 }
 
 #controls {
+  margin: auto;
   border-bottom: 1px solid #ccc;
   padding: 1em 0;
   height: 2em;
+  width: 47em;
 }
 
 #modes {
@@ -187,8 +239,13 @@ body {
   text-shadow: 0 1px 0 black;
 }
 
+#toc-wrap-wrap {
+  margin: 1em 2em 0 2em;
+}
 #toc-wrap {
-  margin: 2em 2em 0;
+  font-size: 16px;
+  margin: auto;
+  width: 40em;
   padding: 1em;
   min-height: 24px;
   background-color: #f0f0f0;
@@ -200,11 +257,7 @@ body {
   font-size: 0.6em;
   max-height: 720px;
   overflow: hidden;
-  -webkit-transition: max-height 0.5s ease-in-out;
-     -moz-transition: max-height 0.5s ease-in-out;
-      -ms-transition: max-height 0.5s ease-in-out;
-       -o-transition: max-height 0.5s ease-in-out;
-          transition: max-height 0.5s ease-in-out;
+  .transition(max-height .5s ease-in-out);
 }
 #toc.hidden {
   display: block;
@@ -225,6 +278,9 @@ body {
 
 /* CodeMirror */
 #input-wrap .CodeMirror {
+  width: 48em;
+  margin: auto;
+  padding-left: 2em;
 }
 #input-wrap .CodeMirror,
 #input-wrap .CodeMirror-scroll {
@@ -235,6 +291,52 @@ body {
 }
 #input-wrap .CodeMirror-focused div.CodeMirror-selected {
   background: rgba(255, 255, 0, 0.3);
+}
+
+/* Fullscreen modes */
+body {
+  &.full-view {
+    #view-wrap {
+      left: 0;
+    }
+    &.preview {
+      #view-wrap {
+        left: 3em;
+      }
+    }
+    #expand-input {
+      display: none;
+    }
+    #expand-view {
+      opacity: 0;
+    }
+    #expand-input, #expand-view {
+      width: 5em;
+    }
+  }
+
+  &.full-input {
+    #input-wrap, #controls-wrap {
+      min-width: 100%;
+    }
+    #view-wrap {
+      left: 100%;
+    }
+    &.preview {
+      #view-wrap {
+        left: 96%;
+      }
+    }
+    #expand-input {
+      opacity: 0;
+    }
+    #expand-view {
+      display: none;
+    }
+    #expand-input, #expand-view {
+      width: 5em;
+    }
+  }
 }
 
 /* Print media */
@@ -248,7 +350,8 @@ body {
     overflow: auto !important;
     position: relative !important;
     bottom: auto !important;
-    left: 0;
+    left: 0 !important;
+    .box-shadow(none);
   }
   #view {
     margin: 0 !important;

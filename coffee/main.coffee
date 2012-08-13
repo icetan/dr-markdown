@@ -61,20 +61,19 @@ module.exports = ->
     updateStatus()
     $('#link-b64-text').val(location.href)
     .removeClass('hidden')
-    .focus()##.select()
+    .focus()
     .blur -> $(@).addClass('hidden')
 
   $('#print').click -> window.print()
 
-  setFull = (to) -> $('#view-wrap').toggleClass('full', to)
-
+  setFullInput = (to) -> $('body').toggleClass('full-input', to)
+  setFullView = (to) -> $('body').toggleClass('full-view', to)
   setToc = (to) ->
     if to
       updateToc()
       $('#toc').removeClass('hidden')
     else
       $('#toc').addClass('hidden')
-
   setIndex = (to) ->
     if to
       if $('#view [data-number]').length is 0
@@ -88,19 +87,17 @@ module.exports = ->
   $('#toggleToc').click -> state.toggle 'toc'
   $('#toggleIndex').click -> state.toggle 'index'
 
-  $('#input-wrap').mouseover -> $('#modes').removeClass 'hidden'
-  $('#input-wrap').mouseout -> $('#modes').addClass 'hidden'
+  $('#expand-input,#expand-view').mouseover ->
+    $(@).removeClass 'transparent'
+    $('body').addClass 'preview' if $('body').is '.full-input,.full-view'
+  $('#expand-input,#expand-view').mouseout ->
+    $(@).addClass 'transparent'
+    $('body').removeClass 'preview'
+  $('#expand-input').click -> state.toggle 'fullinput'
+  $('#expand-view').click -> state.set('full', not $('body').is('.full-input,.full-view'))
   $(document).mouseout (e) ->
     from = e.relatedTarget or e.toElement
     updateStatus() if not from or from.nodeName is 'HTML'
-  $('#mode-gfm').click ->
-    editor.setOption 'mode', 'gfm'
-    $('#modes .label').removeClass('active')
-    $(@).addClass('active')
-  $('#mode-html').click ->
-    editor.setOption 'mode', 'htmlmixed'
-    $('#modes .label').removeClass('active')
-    $(@).addClass('active')
 
   saveTimer = null
   editor = CodeMirror.fromTextArea $('#input-md')[0],
@@ -120,7 +117,8 @@ module.exports = ->
   setState = ->
     state.parseHash location.hash, (data) ->
       editor.setValue data if data? and data isnt editor.getValue()
-      setFull state.has 'full'
+      setFullInput state.has 'fullinput'
+      setFullView state.has 'full'
       setIndex state.has 'index'
       setToc state.has 'toc'
 

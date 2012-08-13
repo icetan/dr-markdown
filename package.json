@@ -16,7 +16,8 @@
       "showdown": "~0.2.0"
   }
   , "scripts": {
-      "build": "boiler app.js > script.js"
+      "build": "boiler app.js > script.js && lessc css/style.less > css/style.css",
+      "watch": "npm run-script build && kckr -e \"npm run-script build\" -r \".*\\.(coffee|less)\" ."
   }
   , "bin": {
       "dr-markdown": "./bin/dr-markdown"

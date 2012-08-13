@@ -3539,7 +3539,7 @@ function(require,exports,module){
   State = require('./State');
 
   module.exports = function() {
-    var docTitle, editor, saveTimer, saved, setFull, setIndex, setState, setToc, state, updateIndex, updateStatus, updateToc, updateView;
+    var docTitle, editor, saveTimer, saved, setFullInput, setFullView, setIndex, setState, setToc, state, updateIndex, updateStatus, updateToc, updateView;
     state = new State;
     state.on('change', function() {
       return updateStatus(true);
@@ -3610,8 +3610,11 @@ function(require,exports,module){
     $('#print').click(function() {
       return window.print();
     });
-    setFull = function(to) {
-      return $('#view-wrap').toggleClass('full', to);
+    setFullInput = function(to) {
+      return $('body').toggleClass('full-input', to);
+    };
+    setFullView = function(to) {
+      return $('body').toggleClass('full-view', to);
     };
     setToc = function(to) {
       if (to) {
@@ -3643,11 +3646,21 @@ function(require,exports,module){
     $('#toggleIndex').click(function() {
       return state.toggle('index');
     });
-    $('#input-wrap').mouseover(function() {
-      return $('#modes').removeClass('hidden');
+    $('#expand-input,#expand-view').mouseover(function() {
+      $(this).removeClass('transparent');
+      if ($('body').is('.full-input,.full-view')) {
+        return $('body').addClass('preview');
+      }
     });
-    $('#input-wrap').mouseout(function() {
-      return $('#modes').addClass('hidden');
+    $('#expand-input,#expand-view').mouseout(function() {
+      $(this).addClass('transparent');
+      return $('body').removeClass('preview');
+    });
+    $('#expand-input').click(function() {
+      return state.toggle('fullinput');
+    });
+    $('#expand-view').click(function() {
+      return state.set('full', !$('body').is('.full-input,.full-view'));
     });
     $(document).mouseout(function(e) {
       var from;
@@ -3655,16 +3668,6 @@ function(require,exports,module){
       if (!from || from.nodeName === 'HTML') {
         return updateStatus();
       }
-    });
-    $('#mode-gfm').click(function() {
-      editor.setOption('mode', 'gfm');
-      $('#modes .label').removeClass('active');
-      return $(this).addClass('active');
-    });
-    $('#mode-html').click(function() {
-      editor.setOption('mode', 'htmlmixed');
-      $('#modes .label').removeClass('active');
-      return $(this).addClass('active');
     });
     saveTimer = null;
     editor = CodeMirror.fromTextArea($('#input-md')[0], {
@@ -3690,7 +3693,8 @@ function(require,exports,module){
         if ((data != null) && data !== editor.getValue()) {
           editor.setValue(data);
         }
-        setFull(state.has('full'));
+        setFullInput(state.has('fullinput'));
+        setFullView(state.has('full'));
         setIndex(state.has('index'));
         return setToc(state.has('toc'));
       });

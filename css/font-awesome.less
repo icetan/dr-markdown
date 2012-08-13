@@ -21,12 +21,19 @@
     Work: Lead Product Designer @ http://kyruus.com
 
     */
+
+@fontAwesomePath: 'font-awesome';
+
 @font-face {
-  font-family: "FontAwesome";
-  src: url('fontawesome-webfont.eot');
-  src: url('fontawesome-webfont.eot?#iefix') format('eot'), url('fontawesome-webfont.woff') format('woff'), url('fontawesome-webfont.ttf') format('truetype'), url('fontawesome-webfont.otf') format('opentype'), url('fontawesome-webfont.svg#FontAwesome') format('svg');
+  font-family: 'FontAwesome';
+  src: url('@{fontAwesomePath}/fontawesome-webfont.eot');
+  src: url('@{fontAwesomePath}/fontawesome-webfont.eot?#iefix') format('embedded-opentype'),
+    url('@{fontAwesomePath}/fontawesome-webfont.woff') format('woff'),
+    url('@{fontAwesomePath}/fontawesome-webfont.ttf') format('truetype'),
+    url('@{fontAwesomePath}/fontawesome-webfont.svg#FontAwesome') format('svg');
   font-weight: normal;
-  font-style: normal; }
+  font-style: normal;
+}
 
 /*  Font Awesome styles
     ------------------------------------------------------- */
@@ -36,47 +43,62 @@
   font-weight: normal;
   font-style: normal;
   display: inline-block;
-  text-decoration: inherit; }
+  text-decoration: inherit;
+}
 
 a [class^="icon-"],
 a [class*=" icon-"] {
   display: inline-block;
-  text-decoration: inherit; }
+  text-decoration: inherit;
+}
 
 /* makes the font 33% larger relative to the icon container */
 .icon-large:before {
   vertical-align: middle;
-  font-size: 4/3em; }
+  font-size: 4/3em;
+}
 
-.btn [class^="icon-"],
-.btn [class*=" icon-"], .nav-tabs [class^="icon-"], .nav-tabs [class*=" icon-"] {
+.btn, .nav-tabs {
+  [class^="icon-"],
+  [class*=" icon-"] {
   /* keeps button heights with and without icons the same */
-  line-height: .9em; }
+    line-height: .9em;
+  }
+}
 
-li [class^="icon-"],
-li [class*=" icon-"] {
-  display: inline-block;
-  width: 1.25em;
-  text-align: center; }
-li .icon-large:before,
-li .icon-large:before {
-  /* 1.5 increased font size for icon-large * 1.25 width */
-  width: 1.875em; }
+li {
+  [class^="icon-"],
+  [class*=" icon-"] {
+    display: inline-block;
+    width: 1.25em;
+    text-align: center;
+  }
+  .icon-large:before,
+  .icon-large:before {
+    /* 1.5 increased font size for icon-large * 1.25 width */
+    width: 1.5*1.25em;
+  }
+}
 
 ul.icons {
   list-style-type: none;
   margin-left: 2em;
-  text-indent: -0.8em; }
-  ul.icons li [class^="icon-"],
-  ul.icons li [class*=" icon-"] {
-    width: .8em; }
-  ul.icons li .icon-large:before,
-  ul.icons li .icon-large:before {
-    /* 1.5 increased font size for icon-large * 1.25 width */
-    vertical-align: initial; }
+  text-indent: -.8em;
 
-/*  Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
-    readers do not read off random characters that represent icons */
+  li {
+    [class^="icon-"],
+    [class*=" icon-"] {
+      width: .8em;
+    }
+    .icon-large:before,
+    .icon-large:before {
+      /* 1.5 increased font size for icon-large * 1.25 width */
+      vertical-align: initial;
+//      width: 1.5*1.25em;
+    }
+  }
+}
+
 /*  Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
     readers do not read off random characters that represent icons */
 .icon-glass:before                { content: "\f000"; }
@@ -111,7 +133,7 @@ ul.icons {
 .icon-play-circle:before          { content: "\f01d"; }
 .icon-repeat:before               { content: "\f01e"; }
 
-/* \f020 is not a valid unicode character. all shifted one down */
+/* \f020 doesn't work in Safari. all shifted one down */
 .icon-refresh:before              { content: "\f021"; }
 .icon-list-alt:before             { content: "\f022"; }
 .icon-lock:before                 { content: "\f023"; }
