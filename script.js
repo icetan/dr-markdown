@@ -3637,9 +3637,6 @@ function(require,exports,module){
         return $('#view-wrap').removeClass('indexed');
       }
     };
-    $('#toggleFull').click(function() {
-      return state.toggle('full');
-    });
     $('#toggleToc').click(function() {
       return state.toggle('toc');
     });
@@ -3660,13 +3657,27 @@ function(require,exports,module){
       return state.toggle('fullinput');
     });
     $('#expand-view').click(function() {
-      return state.set('full', !$('body').is('.full-input,.full-view'));
+      return state.toggle('full');
     });
     $(document).mouseout(function(e) {
       var from;
       from = e.relatedTarget || e.toElement;
       if (!from || from.nodeName === 'HTML') {
         return updateStatus();
+      }
+    });
+    $('body').keypress(function(e) {
+      if (e.ctrlKey && e.altKey) {
+        if (e.keyCode === 24) {
+          state.set('full', false);
+          return state.set('fullinput', true);
+        } else if (e.keyCode === 3) {
+          state.set('full', false);
+          return state.set('fullinput', false);
+        } else if (e.keyCode === 22) {
+          state.set('fullinput', false);
+          return state.set('full', true);
+        }
       }
     });
     saveTimer = null;

@@ -83,7 +83,6 @@ module.exports = ->
     else
       $('#view-wrap').removeClass('indexed')
 
-  $('#toggleFull').click -> state.toggle 'full'
   $('#toggleToc').click -> state.toggle 'toc'
   $('#toggleIndex').click -> state.toggle 'index'
 
@@ -94,10 +93,22 @@ module.exports = ->
     $(@).addClass 'transparent'
     $('body').removeClass 'preview'
   $('#expand-input').click -> state.toggle 'fullinput'
-  $('#expand-view').click -> state.set('full', not $('body').is('.full-input,.full-view'))
+  $('#expand-view').click -> state.toggle 'full'
   $(document).mouseout (e) ->
     from = e.relatedTarget or e.toElement
     updateStatus() if not from or from.nodeName is 'HTML'
+
+  $('body').keypress (e) ->
+    if e.ctrlKey and e.altKey
+      if e.keyCode is 24 # ctrl+alt+x
+        state.set 'full', off
+        state.set 'fullinput', on
+      else if e.keyCode is 3 # ctrl+alt+c
+        state.set 'full', off
+        state.set 'fullinput', off
+      else if e.keyCode is 22 # ctrl+alt+v
+        state.set 'fullinput', off
+        state.set 'full', on
 
   saveTimer = null
   editor = CodeMirror.fromTextArea $('#input-md')[0],
