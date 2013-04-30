@@ -133,6 +133,7 @@ module.exports = ->
       setFullView state.has 'full'
       setIndex state.has 'index'
       setToc state.has 'toc'
+      $('#theme').attr 'href', "themes/#{state.state.theme or 'serif'}.css"
 
   $(window).bind 'hashchange', setState
 

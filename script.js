@@ -3708,7 +3708,8 @@ function(require,exports,module){
         setFullInput(state.has('fullinput'));
         setFullView(state.has('full'));
         setIndex(state.has('index'));
-        return setToc(state.has('toc'));
+        setToc(state.has('toc'));
+        return $('#theme').attr('href', "themes/" + (state.state.theme || 'serif') + ".css");
       });
     };
     $(window).bind('hashchange', setState);
