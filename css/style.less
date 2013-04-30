@@ -177,7 +177,7 @@ body {
   background-color: white;
   position: absolute;
   top: 0;
-  left: 50em;
+  left: 0;
   right: 0;
   bottom: 0;
   overflow-y: scroll;
@@ -242,7 +242,6 @@ body {
   margin: 1em 2em 0 2em;
 }
 #toc-wrap {
-  font-size: 16px;
   margin: auto;
   width: 40em;
   padding: 1em;
@@ -296,7 +295,6 @@ body {
 body {
   &.full-view {
     #view-wrap {
-      left: 0;
     }
     &.preview {
       #view-wrap {
@@ -336,6 +334,29 @@ body {
       width: 5em;
     }
   }
+}
+
+@media only screen {
+  .scale {font-size:16px;}
+  .full-view .scale {font-size:16px;}
+}
+
+@media only screen and (min-width: 1152px) {
+  .scale {font-size:12px;}
+  #view-wrap {
+    left: 50em;
+  }
+  body.full-view #view-wrap {
+    left: 0;
+  }
+}
+
+@media only screen and (min-width: 1240px) {
+  .scale {font-size:14px;}
+}
+
+@media only screen and (min-width: 1320px) {
+  .scale {font-size:16px;}
 }
 
 /* Print media */
