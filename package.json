@@ -13,11 +13,12 @@
       { "type": "MIT" }
   ]
   , "devDependencies": {
-      "showdown": "~0.2.0"
+      "less": "*"
+    , "boiler": "*"
+    , "showdown": "~0.2.0"
   }
   , "scripts": {
-      "build": "boiler app.js > script.js && lessc css/style.less > css/style.css",
-      "watch": "npm run-script build && kckr -e \"npm run-script build\" -r \".*\\.(coffee|less)\" ."
+      "install": "node_modules/.bin/boiler app.js > script.js && node_modules/.bin/lessc style/style.less > style/style.css"
   }
   , "bin": {
       "dr-markdown": "./bin/dr-markdown"

@@ -716,215 +716,6 @@ ul.icons li .icon-large:before {
 .icon-user-md:before {
   content: "\f200";
 }
-.markdown {
-  color: #444;
-  font-family: Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif;
-  font-size: 12px;
-  line-height: 1.5em;
-}
-.markdown a {
-  color: #0645ad;
-  text-decoration: none;
-}
-.markdown a:visited {
-  color: #0b0080;
-}
-.markdown a:hover {
-  color: #06e;
-}
-.markdown a:active {
-  color: #faa700;
-}
-.markdown a:focus {
-  outline: thin dotted;
-}
-.markdown a:hover,
-.markdown a:active {
-  outline: 0;
-}
-.markdown p {
-  margin: 1em 0;
-}
-.markdown img {
-  max-width: 100%;
-}
-.markdown h1,
-.markdown h2,
-.markdown h3,
-.markdown h4,
-.markdown h5,
-.markdown h6 {
-  font-weight: normal;
-  color: #111;
-  line-height: 1em;
-}
-.markdown h4,
-.markdown h5,
-.markdown h6 {
-  font-weight: bold;
-}
-.markdown h1 {
-  font-size: 2.5em;
-}
-.markdown h2 {
-  font-size: 2em;
-}
-.markdown h3 {
-  font-size: 1.5em;
-}
-.markdown h4 {
-  font-size: 1.2em;
-}
-.markdown h5 {
-  font-size: 1em;
-}
-.markdown h6 {
-  font-size: 0.9em;
-}
-.markdown blockquote {
-  color: #666666;
-  margin: 0;
-  padding-left: 3em;
-  border-left: 0.5em #EEE solid;
-}
-.markdown hr {
-  display: block;
-  height: 2px;
-  border: 0;
-  border-top: 1px solid #aaa;
-  border-bottom: 1px solid #eee;
-  margin: 1em 0;
-  padding: 0;
-}
-.markdown pre,
-.markdown code,
-.markdown kbd,
-.markdown samp {
-  color: #000;
-  font-family: monospace, monospace;
-  _font-family: 'courier new', monospace;
-  font-size: 0.98em;
-}
-.markdown pre {
-  white-space: pre;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-.markdown b,
-.markdown strong {
-  font-weight: bold;
-}
-.markdown dfn {
-  font-style: italic;
-}
-.markdown ins {
-  background: #ff9;
-  color: #000;
-  text-decoration: none;
-}
-.markdown mark {
-  background: #ff0;
-  color: #000;
-  font-style: italic;
-  font-weight: bold;
-}
-.markdown sub,
-.markdown sup {
-  font-size: 75%;
-  line-height: 0;
-  position: relative;
-  vertical-align: baseline;
-}
-.markdown sup {
-  top: -0.5em;
-}
-.markdown sub {
-  bottom: -0.25em;
-}
-.markdown ul,
-.markdown ol {
-  margin: 1em 0;
-  padding: 0 0 0 2em;
-}
-.markdown li p:last-child {
-  margin: 0;
-}
-.markdown dd {
-  margin: 0 0 0 2em;
-}
-.markdown img {
-  border: 0;
-  -ms-interpolation-mode: bicubic;
-  vertical-align: middle;
-}
-.markdown table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-.markdown td {
-  vertical-align: top;
-}
-@media print {
-  .markdown {
-    font-size: 12pt;
-    max-width: 100%;
-  }
-  .markdown * {
-    background: transparent !important;
-    color: black !important;
-    filter: none !important;
-    -ms-filter: none !important;
-  }
-  .markdown a,
-  .markdown a:visited {
-    text-decoration: underline;
-  }
-  .markdown hr {
-    height: 1px;
-    border: 0;
-    border-bottom: 1px solid black;
-  }
-  .markdown a[href]:after {
-    content: " (" attr(href) ")";
-  }
-  .markdown abbr[title]:after {
-    content: " (" attr(title) ")";
-  }
-  .markdown .ir a:after,
-  .markdown a[href^="javascript:"]:after,
-  .markdown a[href^="#"]:after {
-    content: "";
-  }
-  .markdown pre,
-  .markdown blockquote {
-    border: 1px solid #999;
-    padding-right: 1em;
-    page-break-inside: avoid;
-  }
-  .markdown tr,
-  .markdown img {
-    page-break-inside: avoid;
-  }
-  .markdown img {
-    max-width: 100% !important;
-  }
-  @page :left {
-    margin: 15mm 20mm 15mm 10mm;
-  }
-  @page :right {
-    margin: 15mm 10mm 15mm 20mm;
-  }
-  .markdown p,
-  .markdown h2,
-  .markdown h3 {
-    orphans: 3;
-    widows: 3;
-  }
-  .markdown h2,
-  .markdown h3 {
-    page-break-after: avoid;
-  }
-}
 ::-moz-selection {
   background: rgba(255, 255, 0, 0.3);
   color: #000000;
@@ -1025,9 +816,9 @@ body {
   padding: 0;
   margin: 0;
   background-color: #fafafa;
-  font: 12px/1.2 Courier, monospace;
 }
 #input-wrap {
+  font: 12px/1.2 Courier, monospace;
   position: absolute;
   top: 4em;
   left: 0;
@@ -1199,6 +990,7 @@ body {
 #toc a:active,
 #toc a:visited {
   color: #666;
+  text-decoration: underline;
 }
 #toc a:hover {
   color: #333;
@@ -1260,6 +1052,22 @@ body.full-input #expand-view {
 }
 @media only screen {
   .scale {
+    font-size: 12px;
+  }
+  .full-view .scale {
+    font-size: 12px;
+  }
+}
+@media only screen and (min-width: 640px) {
+  .scale {
+    font-size: 14px;
+  }
+  .full-view .scale {
+    font-size: 14px;
+  }
+}
+@media only screen and (min-width: 752px) {
+  .scale {
     font-size: 16px;
   }
   .full-view .scale {
@@ -1277,12 +1085,12 @@ body.full-input #expand-view {
     left: 0;
   }
 }
-@media only screen and (min-width: 1240px) {
+@media only screen and (min-width: 1280px) {
   .scale {
     font-size: 14px;
   }
 }
-@media only screen and (min-width: 1320px) {
+@media only screen and (min-width: 1400px) {
   .scale {
     font-size: 16px;
   }
@@ -1319,5 +1127,64 @@ body.full-input #expand-view {
   }
   .btn {
     display: none !important;
+  }
+  .markdown {
+    font-size: 12pt;
+    max-width: 100%;
+  }
+  .markdown * {
+    background: transparent !important;
+    color: black !important;
+    filter: none !important;
+    -ms-filter: none !important;
+  }
+  .markdown a,
+  .markdown a:visited {
+    text-decoration: underline;
+  }
+  .markdown hr {
+    height: 1px;
+    border: 0;
+    border-bottom: 1px solid black;
+  }
+  .markdown a[href]:after {
+    content: " (" attr(href) ")";
+  }
+  .markdown abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+  .markdown .ir a:after,
+  .markdown a[href^="javascript:"]:after,
+  .markdown a[href^="#"]:after {
+    content: "";
+  }
+  .markdown pre,
+  .markdown blockquote {
+    border: 1px solid #999;
+    padding-right: 1em;
+    page-break-inside: avoid;
+  }
+  .markdown tr,
+  .markdown img {
+    page-break-inside: avoid;
+  }
+  .markdown img {
+    max-width: 100% !important;
+  }
+  @page :left {
+    margin: 15mm 20mm 15mm 10mm;
+  }
+  @page :right {
+    margin: 15mm 10mm 15mm 20mm;
+  }
+  .markdown p,
+  .markdown h2,
+  .markdown h3 {
+    orphans: 3;
+    widows: 3;
+  }
+  .markdown h2,
+  .markdown h3 {
+    page-break-after: avoid;
   }
 }
