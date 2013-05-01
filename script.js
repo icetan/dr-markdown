@@ -3620,9 +3620,9 @@ function(require,exports,module){
     setToc = function(to) {
       if (to) {
         updateToc();
-        return $('#toc').removeClass('hidden');
+        return $('body').addClass('toc');
       } else {
-        return $('#toc').addClass('hidden');
+        return $('body').removeClass('toc');
       }
     };
     setIndex = function(to) {

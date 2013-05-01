@@ -905,7 +905,7 @@ body {
   transition: left 0.5s ease;
 }
 #view {
-  padding: 2em;
+  padding: 0 2em 2em;
   margin: auto;
   width: 42em;
 }
@@ -959,32 +959,35 @@ body {
   text-shadow: 0 1px 0 black;
 }
 #toc-wrap-wrap {
-  margin: 1em 2em 0 2em;
+  margin: 0 2em;
 }
 #toc-wrap {
   margin: auto;
   width: 40em;
   padding: 1em;
   min-height: 24px;
+  border-radius: 0 0 4px 4px;
+  -moz-border-radius: 0 0 4px 4px;
+  -webkit-border-radius: 0 0 4px 4px;
+  opacity: 0.4;
+}
+body.toc #toc-wrap,
+#toc-wrap:hover {
   background-color: #f0f0f0;
-  border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
+  opacity: 1;
+}
+body.toc #toc {
+  max-height: 720px;
 }
 #toc {
-  font-size: 0.6em;
-  max-height: 720px;
+  max-height: 0;
   overflow: hidden;
   -webkit-transition: max-height 0.5s ease-in-out;
   -moz-transition: max-height 0.5s ease-in-out;
   -ms-transition: max-height 0.5s ease-in-out;
   -o-transition: max-height 0.5s ease-in-out;
   transition: max-height 0.5s ease-in-out;
-}
-#toc.hidden {
-  display: block;
-  visibility: visible;
-  max-height: 0;
+  font-size: 0.6em;
 }
 #toc,
 #toc a,
@@ -1052,11 +1055,11 @@ body.full-input #expand-view {
   width: 5em;
 }
 .scale {
-  -webkit-transition: font-size 0.3s, width 0.3s;
-  -moz-transition: font-size 0.3s, width 0.3s;
-  -ms-transition: font-size 0.3s, width 0.3s;
-  -o-transition: font-size 0.3s, width 0.3s;
-  transition: font-size 0.3s, width 0.3s;
+  -webkit-transition: font-size 0.3s, width 0.3s, background-color 0.3s, opacity 0.3s;
+  -moz-transition: font-size 0.3s, width 0.3s, background-color 0.3s, opacity 0.3s;
+  -ms-transition: font-size 0.3s, width 0.3s, background-color 0.3s, opacity 0.3s;
+  -o-transition: font-size 0.3s, width 0.3s, background-color 0.3s, opacity 0.3s;
+  transition: font-size 0.3s, width 0.3s, background-color 0.3s, opacity 0.3s;
 }
 @media only screen {
   .scale {

@@ -72,9 +72,9 @@ module.exports = ->
   setToc = (to) ->
     if to
       updateToc()
-      $('#toc').removeClass('hidden')
+      $('body').addClass('toc')
     else
-      $('#toc').addClass('hidden')
+      $('body').removeClass('toc')
   setIndex = (to) ->
     if to
       if $('#view [data-number]').length is 0
