@@ -1051,6 +1051,13 @@ body.full-input #expand-input,
 body.full-input #expand-view {
   width: 5em;
 }
+.scale {
+  -webkit-transition: font-size 0.3s, width 0.3s;
+  -moz-transition: font-size 0.3s, width 0.3s;
+  -ms-transition: font-size 0.3s, width 0.3s;
+  -o-transition: font-size 0.3s, width 0.3s;
+  transition: font-size 0.3s, width 0.3s;
+}
 @media only screen {
   .scale {
     font-size: 12px;
@@ -1098,10 +1105,20 @@ body.full-input #expand-view {
 }
 /* Print media */
 @media print {
+  @page  {
+    size: auto;
+    margin: 20mm 25mm 20mm 25mm;
+  }
   html,
   body {
     height: auto !important;
     overflow: auto !important;
+  }
+  body {
+    font-size: 14pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: transparent !important;
   }
   #view-wrap {
     width: auto !important;
@@ -1116,7 +1133,12 @@ body.full-input #expand-view {
   #view {
     margin: 0 !important;
     padding: 0 !important;
-    max-width: auto !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  #view > *:first-child {
+    margin-top: 0 !important;
+    color: red;
   }
   #controls,
   #input-wrap {
@@ -1129,63 +1151,53 @@ body.full-input #expand-view {
   .btn {
     display: none !important;
   }
-  .markdown {
-    font-size: 12pt;
-    max-width: 100%;
-  }
-  .markdown * {
+  * {
     background: transparent !important;
     color: black !important;
     filter: none !important;
     -ms-filter: none !important;
   }
-  .markdown a,
-  .markdown a:visited {
+  a,
+  a:visited {
     text-decoration: underline;
   }
-  .markdown hr {
+  hr {
     height: 1px;
     border: 0;
     border-bottom: 1px solid black;
   }
-  .markdown a[href]:after {
+  a[href]:after {
     content: " (" attr(href) ")";
   }
-  .markdown abbr[title]:after {
+  abbr[title]:after {
     content: " (" attr(title) ")";
   }
-  .markdown .ir a:after,
-  .markdown a[href^="javascript:"]:after,
-  .markdown a[href^="#"]:after {
+  .ir a:after,
+  a[href^="javascript:"]:after,
+  a[href^="#"]:after {
     content: "";
   }
-  .markdown pre,
-  .markdown blockquote {
-    border: 1px solid #999;
+  pre,
+  blockquote {
+    border: none;
     padding-right: 1em;
     page-break-inside: avoid;
   }
-  .markdown tr,
-  .markdown img {
+  tr,
+  img {
     page-break-inside: avoid;
   }
-  .markdown img {
+  img {
     max-width: 100% !important;
   }
-  @page :left {
-    margin: 15mm 20mm 15mm 10mm;
-  }
-  @page :right {
-    margin: 15mm 10mm 15mm 20mm;
-  }
-  .markdown p,
-  .markdown h2,
-  .markdown h3 {
+  p,
+  h2,
+  h3 {
     orphans: 3;
     widows: 3;
   }
-  .markdown h2,
-  .markdown h3 {
+  h2,
+  h3 {
     page-break-after: avoid;
   }
 }

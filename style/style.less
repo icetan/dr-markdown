@@ -337,6 +337,10 @@ body {
   }
 }
 
+.scale {
+  .transition(font-size .3s, width .3s;);
+}
+
 @media only screen {
   .scale {font-size:12px;}
   .full-view .scale {font-size:12px;}
@@ -370,9 +374,19 @@ body {
 
 /* Print media */
 @media print {
+  @page {
+    size: auto;
+    margin: 20mm 25mm 20mm 25mm;
+  }
   html, body {
     height: auto !important;
     overflow: auto !important;
+  }
+  body {
+    font-size: 14pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: transparent !important;
   }
   #view-wrap {
     width: auto !important;
@@ -385,8 +399,14 @@ body {
   #view {
     margin: 0 !important;
     padding: 0 !important;
-    max-width: auto !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    > *:first-child {
+      margin-top: 0 !important;
+      color: red;
+    }
   }
+
   #controls, #input-wrap {
     display: none !important;
   }
@@ -397,21 +417,15 @@ body {
   .btn {
     display: none !important;
   }
-  .markdown {
-    font-size:12pt;
-    max-width:100%;
-    * { background: transparent !important; color: black !important; filter:none !important; -ms-filter: none !important; }
-    a, a:visited { text-decoration: underline; }
-    hr { height: 1px; border:0; border-bottom:1px solid black; }
-    a[href]:after { content: " (" attr(href) ")"; }
-    abbr[title]:after { content: " (" attr(title) ")"; }
-    .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }
-    pre, blockquote { border: 1px solid #999; padding-right: 1em; page-break-inside: avoid; }
-    tr, img { page-break-inside: avoid; }
-    img { max-width: 100% !important; }
-    @page :left { margin: 15mm 20mm 15mm 10mm; }
-    @page :right { margin: 15mm 10mm 15mm 20mm; }
-    p, h2, h3 { orphans: 3; widows: 3; }
-    h2, h3 { page-break-after: avoid; }
-  }
+  * { background: transparent !important; color: black !important; filter:none !important; -ms-filter: none !important; }
+  a, a:visited { text-decoration: underline; }
+  hr { height: 1px; border:0; border-bottom:1px solid black; }
+  a[href]:after { content: " (" attr(href) ")"; }
+  abbr[title]:after { content: " (" attr(title) ")"; }
+  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }
+  pre, blockquote { border: none; padding-right: 1em; page-break-inside: avoid; }
+  tr, img { page-break-inside: avoid; }
+  img { max-width: 100% !important; }
+  p, h2, h3 { orphans: 3; widows: 3; }
+  h2, h3 { page-break-after: avoid; }
 }
