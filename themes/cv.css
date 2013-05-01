@@ -88,11 +88,11 @@ td { vertical-align: top; }
 .markdown h1{
   font-family: sans-serif;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.05em;
 }
 .markdown h2{
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.1em;
   border-bottom: 1px solid black;
 }
 
