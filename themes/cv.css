@@ -4,8 +4,7 @@ body {
   line-height:1.5em;
 }
 
-a{ color: #0645ad; text-decoration:none;}
-a:visited{ color: #0b0080; }
+a{ color: #0645ad; }
 a:hover{ color: #06e; }
 a:active{ color:#faa700; }
 a:focus{ outline: thin dotted; }
