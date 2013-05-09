@@ -3644,16 +3644,6 @@ function(require,exports,module){
     $('#toggleIndex').click(function() {
       return state.toggle('index');
     });
-    $('#expand-input,#expand-view').mouseover(function() {
-      $(this).removeClass('transparent');
-      if ($('body').is('.full-input,.full-view')) {
-        return $('body').addClass('preview');
-      }
-    });
-    $('#expand-input,#expand-view').mouseout(function() {
-      $(this).addClass('transparent');
-      return $('body').removeClass('preview');
-    });
     $('#expand-input').click(function() {
       return state.toggle('fullinput');
     });

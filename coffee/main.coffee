@@ -86,13 +86,6 @@ module.exports = ->
 
   $('#toggleToc').click -> state.toggle 'toc'
   $('#toggleIndex').click -> state.toggle 'index'
-
-  $('#expand-input,#expand-view').mouseover ->
-    $(@).removeClass 'transparent'
-    $('body').addClass 'preview' if $('body').is '.full-input,.full-view'
-  $('#expand-input,#expand-view').mouseout ->
-    $(@).addClass 'transparent'
-    $('body').removeClass 'preview'
   $('#expand-input').click -> state.toggle 'fullinput'
   $('#expand-view').click -> state.toggle 'full'
   $(document).mouseout (e) ->
