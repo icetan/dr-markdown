@@ -1,4 +1,5 @@
-EventEmitter = require('../lib/events').EventEmitter
+{EventEmitter} = require 'events'
+
 base64 = require '../lib/base64'
 lzw = require '../lib/lzw'
 
@@ -7,8 +8,7 @@ extend = (r={}, d) ->
   r
 kvpToDict = (d, kvp) -> d[kvp[0]] = (if kvp[1]? then kvp[1] else true)
 
-class @Storage
-
+class Storage
   constructor: ->
     @id ?= new Id
     @version ?= 0
@@ -22,29 +22,20 @@ class @Storage
       {data, @version} = localStorage[@id]
       fn data, @version
 
-class @State extends EventEmitter
-  constructor: (coders={}) ->
+class State extends EventEmitter
+  constructor: ->
     super()
-    extend @coders, coders
     @state =
       toc: false
       index: false
     @start()
 
-  coders:
-    lzw:
-      encode: (data, fn) -> fn base64.encode lzw.encode data
-      decode: (data, fn) -> fn lzw.decode base64.decode data
-    base64:
-      encode: (data, fn) -> fn base64.encode data
-      decode: (data, fn) -> fn base64.decode data
-
   encodeData: (type, data, fn) ->
-    @coders[type].encode data, (data) -> fn type+';'+data
+    State.coders[type].encode data, (data) -> fn type+';'+data
 
   decodeData: (data, fn) ->
     [type, data] = data.split ';', 2
-    @coders[type].decode data, fn
+    State.coders[type].decode data, fn
 
   start: ->
     {protocol, host, pathname} = window.location
@@ -90,5 +81,13 @@ class @State extends EventEmitter
   has: (type) -> @state[type]? and @state[type] isnt false
   set: (type, val) -> @state[type] = val; @emit 'change', type, val
   toggle: (type) -> @set type, not @has type
+
+State.coders =
+  lzw:
+    encode: (data, fn) -> fn base64.encode lzw.encode data
+    decode: (data, fn) -> fn lzw.decode base64.decode data
+  base64:
+    encode: (data, fn) -> fn base64.encode data
+    decode: (data, fn) -> fn base64.decode data
 
 module.exports = State
