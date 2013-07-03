@@ -3,6 +3,7 @@ Showdown = require 'showdown'
 markdown = new Showdown.converter()
 
 require './unify.coffee'
+require './state-gist.coffee'
 State = require './State.coffee'
 
 {number, index, toc} = require './utils.coffee'
