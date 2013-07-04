@@ -18,6 +18,7 @@ auth = ->
     if xOrigState isnt query.state
       return console.error 'cross origin state has been tampered with.'
     xhr
+      method: 'POST'
       url: 'https://github.com/login/oauth/access_token'
       data:
         client_id: clientId
