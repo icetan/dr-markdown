@@ -3,14 +3,14 @@ Showdown = require 'showdown'
 markdown = new Showdown.converter()
 
 require './unify.coffee'
+{ State, state:state_ } = require './State.coffee'
 require './state-gist.coffee'
-State = require './State.coffee'
 
 {number, index, toc} = require './utils.coffee'
 
 module.exports = ->
-  state = new State
-  state.on 'change', -> updateStatus yes
+  state = {}
+  #state.on 'change', -> updateStatus yes
 
   tocEl = document.getElementById 'toc'
   viewEl = document.getElementById 'view'
@@ -24,11 +24,14 @@ module.exports = ->
       'Untitled'
     [].forEach.call tmp.querySelectorAll('.index'), (el) -> tmp.removeChild el
     tmp.textContent
+
   saved = yes
+
   updateStatus = (force) ->
     if not saved or force
-      state.generateHash 'base64', editor.getValue(), (hash) ->
-        location.hash = hash
+      state_.store null, text:editor.getValue(), state:state
+      #state.generateHash 'base64', editor.getValue(), (hash) ->
+      #  location.hash = hash
       document.title = docTitle()
       saved = yes
 
@@ -44,8 +47,8 @@ module.exports = ->
     md = md.join '\n'
     v = viewEl
     v.innerHTML = markdown.makeHtml(md).replace(cursorToken, '<span id="cursor"></span>')
-    updateIndex() if state.has 'index'
-    updateToc() if state.has 'toc'
+    updateIndex() if state.index
+    updateToc() if state.toc
     scrollTop = viewWrapEl.scrollTop
     viewHeight = viewWrapEl.offsetHeight
     cursorSpan = document.getElementById 'cursor'
@@ -66,7 +69,7 @@ module.exports = ->
     if to
       if document.querySelectorAll('#view [data-number]').length is 0
         updateIndex()
-        updateToc() if state.has 'toc'
+        updateToc() if state.toc
       model.showIndex = 'indexed'
     else
       model.showIndex = ''
@@ -85,16 +88,16 @@ module.exports = ->
     onDragEvent: (editor, event) ->
       showDnd = no if showDnd or event.type is 'drop'
       false
+  setState = (data) ->
+    { text, state: state__ } = data
+    state = state__ or {}
+    editor.setValue text if text? and text isnt editor.getValue()
+    setMode state.mode
+    setIndex state.index
+    setToc state.toc
+    model.theme = state.theme or 'serif'
 
-  setState = ->
-    state.parseHash location.hash, (data) ->
-      editor.setValue data if data? and data isnt editor.getValue()
-      setMode state.state['mode']
-      setIndex state.has 'index'
-      setToc state.has 'toc'
-      model.theme = state.state.theme or 'serif'
-
-  window.addEventListener 'hashchange', setState
+  #window.addEventListener 'hashchange', setState
 
   model =
     show: (v) -> if v then '' else 'hide'
@@ -112,25 +115,26 @@ module.exports = ->
       #.blur -> $(@).addClass('hidden')
     print: -> window.print()
     mode: ''
-    toggleToc: -> state.toggle 'toc'
-    toggleIndex: -> state.toggle 'index'
+    toggleToc: -> state.toc = not state.toc
+    toggleIndex: -> state.index = not state.index
     expandInput: ->
-      state.set 'mode', (if state.state['mode'] then '' else 'write')
+      state.mode = (if state.mode then '' else 'write')
     expandView: ->
-      state.set 'mode', (if state.state['mode'] then '' else 'read')
+      state.mode = (if state.mode then '' else 'read')
     mouseout: (e) ->
       from = e.relatedTarget or e.toElement
       updateStatus() if not from or from.nodeName is 'HTML'
     keypress: (e) ->
       if e.ctrlKey and e.altKey
         if e.keyCode is 24 # ctrl+alt+x
-          state.set 'mode', 'write'
+          state.mode = 'write'
         else if e.keyCode is 3 # ctrl+alt+c
-          state.set 'mode', ''
+          state.mode = ''
         else if e.keyCode is 22 # ctrl+alt+v
-          state.set 'mode', 'read'
+          state.mode = 'read'
 
-  setState()
+  state_.restore null, null, setState
+  state_.on 'restore', setState
 
   showDnd = no if not editor.getValue()
   #$('#input-wrap').one 'click', -> $('#drag-n-drop-wrap').remove()
@@ -138,4 +142,4 @@ module.exports = ->
   vixen(document.body.parentNode, model)
 
   updateView()
-  updateStatus()
+  #updateStatus()

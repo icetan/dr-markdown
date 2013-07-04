@@ -8,20 +8,6 @@ extend = (r={}, d) ->
   r
 kvpToDict = (d, kvp) -> d[kvp[0]] = (if kvp[1]? then kvp[1] else true)
 
-class Storage
-  constructor: ->
-    @id ?= new Id
-    @version ?= 0
-
-  local:
-    save: (data, fn) =>
-      @version += 1 if @id of localStorage
-      localStorage[@id] = data
-      fn @id, @version
-    get: (@id, fn) =>
-      {data, @version} = localStorage[@id]
-      fn data, @version
-
 class State extends EventEmitter
   constructor: ->
     super()
@@ -75,19 +61,56 @@ class State extends EventEmitter
 
   replace: ->
     @_save type, data, (id, version) ->
-      window.history.replaceState {}, '', @baseUrl+type+'/'+id+'/'+version+
-        '#'+generateState()
+      window.history.replaceState {}, '', type+'/'+id
 
   has: (type) -> @state[type]? and @state[type] isnt false
   set: (type, val) -> @state[type] = val; @emit 'change', type, val
   toggle: (type) -> @set type, not @has type
 
-State.coders =
-  lzw:
-    encode: (data, fn) -> fn base64.encode lzw.encode data
-    decode: (data, fn) -> fn lzw.decode base64.decode data
-  base64:
-    encode: (data, fn) -> fn base64.encode data
-    decode: (data, fn) -> fn base64.decode data
+deserialize = ->
+  [type, id] = window.location.hash.substr(1).split '/', 2
+  { type, id }
+serialize = (data) -> window.location.hash = '#'+data.type+'/'+data.id
 
-module.exports = State
+state = new EventEmitter
+
+state.storeType = 'base64'
+state.storeId = ''
+
+state.stores =
+  #lzw:
+  #  store: (data, fn) -> fn base64.encode lzw.encode data
+  #  restore: (data, fn) -> fn lzw.decode base64.decode data
+  base64:
+    store: (id, data, callback) ->
+      callback base64.encode JSON.stringify(data or '{}')
+    restore: (id, callback) ->
+      callback JSON.parse base64.decode(id) or '{}'
+
+state.store = (storeType, data, callback) ->
+  state.storeType = storeType if storeType
+  state.stores[state.storeType].store state.storeId, data, (storeId)->
+    state.storeId = storeId
+    serialize type:state.storeType, id:storeId
+    #window.history.replaceState {}, '', type+'/'+id
+    callback? storeId
+
+state.restore = (storeType, storeId, callback) ->
+  if not storeType? and not storeId?
+    { type:storeType, id:storeId } = deserialize()
+  state.storeType = storeType if storeType
+  state.storeId = storeId
+  if storeId?
+    state.stores[state.storeType].restore state.storeId, (data) ->
+      callback data
+
+window.addEventListener 'hashchange', ->
+  { type:storeType, id:storeId } = deserialize()
+  if storeType isnt state.storeType or storeId isnt state.storeId
+    state.restore storeType, storeId, (data) ->
+      store.emit 'restore', data
+
+#window.addEventListener 'popstate', ->
+#  state.fromLocation window.location.pathname
+
+module.exports = { State, state }
