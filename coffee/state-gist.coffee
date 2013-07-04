@@ -10,9 +10,13 @@ clientId = '04c4de3332664d704642'
 clientSecret = 'c8d6ab58bbf8095c82c0f11e57db92bf2b9f76be'
 redirect = window.location.href
 
-auth = () ->
+auth = ->
   query = parseQuery window.location.search
   if query.code
+    xOrigState = window.localStorage.getItem 'x-orig-state'
+    window.localStorage.removeItem 'x-orig-state'
+    if xOrigState isnt query.state
+      return console.error 'cross origin state has been tampered with.'
     xhr
       url: 'https://github.com/login/oauth/access_token'
       data:
@@ -25,6 +29,7 @@ auth = () ->
 
   else
     rnd = ('0123456789abcdef'[Math.random() * 16 | 0] for x in [0..10]).join ''
+    window.localStorage.setItem 'x-orig-state', rnd
     #iframeEl = document.createElement 'iframe'
     #extend iframeEl.style,
     #  position: 'absolute'
@@ -58,4 +63,5 @@ state.stores.gist =
       xhr.json url:stateUrl, (err, state) ->
         xhr url:textUrl, (err, text) ->
           callback { text, state }
+
 setTimeout (-> auth()), 1000
