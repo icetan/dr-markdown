@@ -8,6 +8,17 @@ require './state-gist.coffee'
 
 {number, index, toc} = require './utils.coffee'
 
+proxy = ->
+  vault_ = {}
+  proxy_ =
+    def: (prop, callback) ->
+      Object.defineProperty proxy_, prop,
+        set: (value) ->
+          old = vault_[prop]
+          vault_[prop] = value
+          callback value, old
+        get: -> vault_[prop]
+
 module.exports = ->
   state = {}
   #state.on 'change', -> updateStatus yes
