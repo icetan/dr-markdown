@@ -1,9 +1,7 @@
 #!/usr/bin/env node
-// -*- js -*-
 
-var fs = require('fs')
-  , file = process.argv[2]
-  ;
+var fs = require('fs'),
+    file = process.argv[2];
 
 function parse (stream) {
   var data = '';

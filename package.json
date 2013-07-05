@@ -26,6 +26,6 @@
     "watch": "node_modules/.bin/watchify coffee/main.coffee -d -t coffeeify -o script.js -v"
   },
   "bin": {
-    "dr-markdown": "./bin/dr-markdown"
+    "dr-markdown": "bin/dr-markdown.js"
   }
 }
