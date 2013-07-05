@@ -4,12 +4,17 @@ var fs = require('fs'),
     file = process.argv[2];
 
 function parse (stream) {
-  var data = '';
+  var text = '';
   stream.resume();
-  stream.on('data', function (chunk) { data += chunk; });
+  stream.on('data', function (chunk) { text += chunk; });
   stream.on('end', function () {
-    var b64 = new Buffer(data).toString('base64');
-    console.log('http://icetan.github.com/dr-markdown#full;base64;'+b64);
+    console.log(text);
+    var data = JSON.stringify({
+          text: text,
+          meta: { mode: 'read' }
+        }),
+        b64 = new Buffer(data).toString('base64');
+    console.log('http://icetan.github.io/dr-markdown/v1/#base64/'+b64);
   });
 }
 
