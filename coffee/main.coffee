@@ -4,23 +4,51 @@ markdown = new Showdown.converter()
 
 require './unify.coffee'
 { State, state:state_ } = require './State.coffee'
-require './state-gist.coffee'
+# require './state-gist.coffee'
 
 {number, index, toc} = require './utils.coffee'
 
-proxy = ->
+extend = (r={}, d) -> r[k] = v for k, v of d; r
+
+proxy = (dict) ->
   vault_ = {}
   proxy_ =
     def: (prop, callback) ->
       Object.defineProperty proxy_, prop,
+        enumerable: true
         set: (value) ->
           old = vault_[prop]
           vault_[prop] = value
           callback value, old
         get: -> vault_[prop]
+    toJSON: -> vault_
+  proxy_.def prop, fn for prop, fn of dict
+  proxy_
 
 module.exports = ->
-  state = {}
+  updateToc = -> tocEl.innerHTML = toc viewEl
+  updateIndex = -> index number viewEl
+  setMode = (mode) ->
+    model.mode = {
+      write: 'full-input'
+      read: 'full-view'
+    }[mode] or ''
+  setToc = (to) ->
+    updateToc() if to
+    model.showToc = if to then 'toc' else ''
+  setIndex = (to) ->
+    if to
+      if document.querySelectorAll('#view [data-number]').length is 0
+        updateIndex()
+        updateToc() if state.toc
+      model.showIndex = 'indexed'
+    else
+      model.showIndex = ''
+
+  state = proxy
+    toc: setToc
+    index: setIndex
+    mode: setMode
   #state.on 'change', -> updateStatus yes
 
   tocEl = document.getElementById 'toc'
@@ -46,10 +74,6 @@ module.exports = ->
       document.title = docTitle()
       saved = yes
 
-  updateToc = -> tocEl.innerHTML = toc viewEl
-
-  updateIndex = -> index number viewEl
-
   cursorToken = '^^^cursor^^^'
   updateView = ->
     cline = editor.getCursor().line
@@ -68,23 +92,6 @@ module.exports = ->
     if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight - cursorHeight
       viewWrapEl.scrollTop = cursorTop - viewHeight/2
 
-  setMode = (mode) ->
-    model.mode = {
-      write: 'full-input'
-      read: 'full-view'
-    }[mode] or ''
-  setToc = (to) ->
-    updateToc() if to
-    model.showToc = if to then 'toc' else ''
-  setIndex = (to) ->
-    if to
-      if document.querySelectorAll('#view [data-number]').length is 0
-        updateIndex()
-        updateToc() if state.toc
-      model.showIndex = 'indexed'
-    else
-      model.showIndex = ''
-
   saveTimer = null
   editor = CodeMirror.fromTextArea document.getElementById('input-md'),
     mode: 'gfm'
@@ -99,13 +106,14 @@ module.exports = ->
     onDragEvent: (editor, event) ->
       showDnd = no if showDnd or event.type is 'drop'
       false
+
   setState = (data) ->
-    { text, state: state__ } = data
-    state = state__ or {}
+    { text, state:state__ } = data
+    extend state, state__ or {}
     editor.setValue text if text? and text isnt editor.getValue()
-    setMode state.mode
-    setIndex state.index
-    setToc state.toc
+    #setMode state.mode
+    #setIndex state.index
+    #setToc state.toc
     model.theme = state.theme or 'serif'
 
   #window.addEventListener 'hashchange', setState
