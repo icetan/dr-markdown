@@ -32,23 +32,24 @@ state = require './state.coffee'
 
 state.stores.gist =
   store: (id, data, callback) ->
+    return callback 'Auto save not supported.' if data.meta.autosave
     xhr.json
       method: 'POST' #if id then 'PATCH' else 'POST'
       url: 'https://api.github.com/gists' #+ if id then '/'+id else ''
       data:
         description: 'Created with Dr. Markdown'
         files:
-          'main.md': content: data.text
-          'state.json': content: JSON.stringify data.state
-    ,(err, data) -> callback data.id
+          'document.md': content: data.text
+          'meta.json': content: JSON.stringify data.meta
+    ,(err, data) -> callback err, data.id
   restore: (id, callback) ->
     xhr.json url:'https://api.github.com/gists/'+id, (err, data) ->
       {
         files: {
-          'main.md': { content:text },
-          'state.json': { content:state }
+          'document.md': { content:text },
+          'meta.json': { content:meta }
         }
       } = data
-      callback { text, state:JSON.parse state }
+      callback err, { text, meta:JSON.parse meta }
 
 #setTimeout (-> auth()), 1000

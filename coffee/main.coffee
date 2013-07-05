@@ -1,3 +1,5 @@
+require './bring-the-noise.coffee'
+
 vixen = require 'vixen'
 Showdown = require 'showdown'
 markdown = new Showdown.converter()
@@ -9,8 +11,8 @@ require './state-gist.coffee'
 
 {number, index, toc} = require './utils.coffee'
 
-extend = (r={}, d) -> r[k] = v for k, v of d; r
-extendA = (r={}, a) -> r[k] = v for [k, v] in a; r
+extend = (r={}, d) -> r[k] = v for k, v of d when v?; r
+extendA = (r={}, a) -> r[k] = v for [k, v] in a when v?; r
 
 proxy = (dict) ->
   vault_ = {}
@@ -62,13 +64,17 @@ docTitle = ->
   [].forEach.call tmp.querySelectorAll('.index'), (el) -> tmp.removeChild el
   tmp.textContent
 
+initiated = no
 saved = yes
 
 save = (force) ->
   if not saved or force
-    state_.store null, text:editor.getValue(), state:state
-    document.title = docTitle()
-    saved = yes
+    state_.store null,
+      text: editor.getValue()
+      meta: extend state, title:docTitle(), autosave:not force
+    ,(err, id) ->
+      saved = not err?
+      updateTitle()
 
 cursorToken = '^^^cursor^^^'
 updateView = ->
@@ -87,6 +93,8 @@ updateView = ->
   cursorHeight = cursorSpan.offsetHeight
   if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight - cursorHeight
     viewWrapEl.scrollTop = cursorTop - viewHeight/2
+updateTitle = ->
+  document.title = (if saved then '' else '*')+docTitle()
 
 saveTimer = null
 editor = CodeMirror.fromTextArea document.getElementById('input-md'),
@@ -94,38 +102,42 @@ editor = CodeMirror.fromTextArea document.getElementById('input-md'),
   theme: 'default'
   lineNumbers: no
   lineWrapping: yes
+  dragDrop: no
   onChange: ->
     updateView()
-    document.title = '*'+docTitle() if saved
-    saved = no
-    clearTimeout saveTimer
-    saveTimer = setTimeout save, 5000
-  onDragEvent: (editor, event) ->
-    showDnd = no if showDnd or event.type is 'drop'
-    false
+    if initiated
+      if saved
+        saved = no
+        updateTitle()
+      clearTimeout saveTimer
+      saveTimer = setTimeout save, 5000
+    else
+      updateTitle()
 
-setState = (data) ->
-  { text, state:state__ } = data
-  extend state, state__ or {}
-  editor.setValue text if text? and text isnt editor.getValue()
+restore = (data) ->
+  currentText = editor.getValue()
+  if data
+    { text, meta } = data
+    extend state, meta or {}
+    editor.setValue text if text? and text isnt currentText
+  else if currentText
+    save true
   model.theme = state.theme or 'serif'
+  initiated = yes
 
 model =
   show: (v) -> if v then '' else 'hide'
   hide: (v) -> if v then 'hide' else ''
-  showDownload: Blob?
-  download: ->
+  noop: (e) -> e.preventDefault(); false
+  stop: (e) -> e.stopPropagation(); false
+  drop: (e) ->
+    reader = new FileReader
+    reader.onload = (e) ->
+      initiated = yes
+      editor.setValue e.target.result
+    reader.readAsText e.dataTransfer.files[0]
+  settings: ->
     model.showStores = yes
-    return
-    saveAs new Blob([editor.getValue()], type: 'text/plain;charset=utf-8'),
-      docTitle()+'.md'
-  #linkB64: ->
-  #  save()
-  #  prompt 'Copy this', location.href
-  #  model.linkCopy = location.href
-  #  model.showLinkCopy = true
-  #  .focus()
-  #  .blur -> $(@).addClass('hidden')
   stores: Object.keys(state_.stores).map (key) -> name: key
   showStores: no
   print: -> window.print()
@@ -136,23 +148,24 @@ model =
     state.mode = (if state.mode then '' else 'write')
   expandView: ->
     state.mode = (if state.mode then '' else 'read')
+  closePopups: -> model.showStores = no
   mouseout: (e) ->
     from = e.relatedTarget or e.toElement
     save() if not from or from.nodeName is 'HTML'
-  keypress: (e) ->
-    if e.ctrlKey and e.altKey
-      if e.keyCode is 24 # ctrl+alt+x
-        state.mode = 'write'
-      else if e.keyCode is 3 # ctrl+alt+c
-        state.mode = ''
-      else if e.keyCode is 22 # ctrl+alt+v
-        state.mode = 'read'
+  hotkey: (e) ->
+    if e.ctrlKey
+      if e.altKey
+        switch e.keyCode
+          when 24 then state.mode = 'write' # ctrl+alt+x
+          when 3 then state.mode = '' # ctrl+alt+c
+          when 22 then state.mode = 'read' # ctrl+alt+v
+      else
+        switch e.keyCode
+          when 19 then save true
 
-state_.restore null, null, setState
-state_.on 'restore', setState
+state_.restore null, null, (err, data) -> restore data
+state_.on 'restore', (data) ->
+  initiated = no
+  restore data
 
-showDnd = no if not editor.getValue()
-
-vixen(document.body.parentNode, model)
-
-updateView()
+vixen document.body.parentNode, model
