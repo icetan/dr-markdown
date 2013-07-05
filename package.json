@@ -12,11 +12,9 @@
   "licenses": [
     { "type": "MIT" }
   ],
-  "dependencies": {
-    "vixen": "*"
-  },
   "devDependencies": {
     "less": "*",
+    "vixen": "*",
     "showdown": "~0.2.0",
     "browserify": "*",
     "watchify": "*",
@@ -24,8 +22,8 @@
     "uglify-js": "*"
   },
   "scripts": {
-    "install": "node_modules/.bin/browserify app.coffee -t coffeeify | node_modules/.bin/uglifyjs > script.js && node_modules/.bin/lessc style/style.less > style/style.css",
-    "watch": "node_modules/.bin/watchify app.coffee -d -t coffeeify -o script.js -v"
+    "install": "node_modules/.bin/browserify coffee/main.coffee -t coffeeify | node_modules/.bin/uglifyjs > script.js && node_modules/.bin/lessc style/style.less > style/style.css",
+    "watch": "node_modules/.bin/watchify coffee/main.coffee -d -t coffeeify -o script.js -v"
   },
   "bin": {
     "dr-markdown": "./bin/dr-markdown"

@@ -18,16 +18,14 @@
   <div id="controls-wrap">
     <div>
       <div id="controls">
-        <i></i>
         <a id="download" class="btn right {{showDownload|show}}"
            title="Download as text file" onclick="{{download}}">
           <i class="icon-download-alt"></i>
         </a>
-        <a id="link-b64" class="btn right relative"
-           title="Copy serialized link to clipboard" onclick=”{{linkB64}}">
-          <i class="icon-link"></i>
-          <input type="text" id="link-b64-text" class="flying right hidden">
-        </a>
+        <ul class="flying right {{showStores|show}}"
+            data-value="store" data-in="stores">
+            <li><a href="#{{store.name}}">{{store.name}}</a></li>
+        </ul>
         <a id="print" class="btn right" title="Print formated document"
            onclick="{{print}}">
           <i class="icon-print"></i>
