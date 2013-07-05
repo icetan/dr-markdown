@@ -13,23 +13,21 @@
   <link id="theme" rel="stylesheet" href="themes/{{theme}}.css"></link>
 </head>
 
-<body class="{{mode}} {{showToc}} {{showIndex}}"
-      onmouseout="{{mouseout}}" onkeypress="{{keypress}}">
+<body class="noise {{mode}} {{showToc}} {{showIndex}}"
+      onclick="{{closePopups}}"
+      onmouseout="{{mouseout}}" onkeypress="{{hotkey}}"
+      ondrop="{{drop}}{{noop}}" ondragover="{{noop}}">
   <div id="controls-wrap">
-    <div>
-      <div id="controls">
-        <a id="download" class="btn right {{showDownload|show}}"
-           title="Download as text file" onclick="{{download}}">
-          <i class="icon-download-alt"></i>
-        </a>
-        <ul class="flying right {{showStores|show}}"
-            data-value="store" data-in="stores">
-            <li><a href="#{{store.name}}">{{store.name}}</a></li>
-        </ul>
-        <a id="print" class="btn right" title="Print formated document"
-           onclick="{{print}}">
-          <i class="icon-print"></i>
-        </a>
+    <div id="controls-bar" class="fade">
+      <div id="controls" >
+        <div id="settings">
+          <a class="btn uni-gear"
+            title="" onclick="{{settings}}{{stop}}"></a>
+          <ul id="stores" class="{{showStores|show}}"
+              data-value="store" data-in="stores">
+              <li><a href="#{{store.name}}">{{store.name}}</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -38,26 +36,22 @@
   <div id="expand-input" onclick="{{expandInput}}"></div>
 
   <div id="input-wrap">
-    <div id="drag-n-drop-wrap" class="flying hidden">
+    <!--<div id="drag-n-drop-wrap" class="flying hidden">
       <div id="drag-n-drop-text" class="label large">
         Drag <i class="icon-file"></i> here
       </div>
-    </div>
+    </div>-->
     <textarea id="input-md"></textarea>
   </div>
 
-  <div id="view-wrap">
+  <div id="view-wrap" class="noise">
     <div id="toc-wrap-wrap">
       <div id="toc-wrap" class="scale">
         <i></i>
-        <a id="toggleToc" class="btn right" title="Toggle table of content"
-           onclick="{{toggleToc}}">
-          <i class="icon-list"></i>
-        </a>
-        <a id="toggleIndex" class="btn right" title="Toggle header index"
-           onclick="{{toggleIndex}}">
-          <i class="icon-list-ol"></i>
-        </a>
+        <a id="toggleToc" class="btn uni-list right" title="Toggle table of content"
+           onclick="{{toggleToc}}"></a>
+        <a id="toggleIndex" class="btn uni-number right" title="Toggle header index"
+           onclick="{{toggleIndex}}"></a>
         <div id="toc"></div>
       </div>
     </div>
