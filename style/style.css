@@ -41,36 +41,6 @@ a::selection {
 a.btn:hover {
   color: #444;
 }
-.label {
-  display: inline-block;
-  border-radius: 18px;
-  -moz-border-radius: 18px;
-  -webkit-border-radius: 18px;
-  background-color: #555;
-  color: white !important;
-  padding: 0.5em 1em 0.3em;
-  margin-left: 2px;
-  font-size: 11px;
-  font-family: Droid Sans;
-}
-.label.active {
-  background-color: black;
-}
-.label.large {
-  font-size: 24px;
-}
-a.label:hover {
-  background-color: #222;
-}
-.flying {
-  position: absolute;
-}
-.flying.right {
-  right: 0;
-}
-.flying.relative {
-  position: relative;
-}
 .transparent {
   opacity: 0 !important;
 }
@@ -192,7 +162,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 2;
+  z-index: 3;
   min-width: 0;
   -webkit-transition: min-width 0.5s ease;
   -moz-transition: min-width 0.5s ease;
@@ -238,24 +208,42 @@ body {
   position: relative;
   float: right;
 }
-#stores {
+#settings > .popup {
   position: absolute;
   right: 0;
-  list-style: none;
-  padding: 0;
-  margin: 0;
   background-color: #fff;
   -webkit-box-shadow: 0 1px 9px -3px rgba(0, 0, 0, 0.6);
   -moz-box-shadow: 0 1px 9px -3px rgba(0, 0, 0, 0.6);
   box-shadow: 0 1px 9px -3px rgba(0, 0, 0, 0.6);
-  text-align: left;
-}
-#stores li {
   font-family: sans-serif;
-  border-bottom: 1px dashed #eee;
-  padding: 0.4em 1em;
 }
-#stores li:last-child {
+#settings > .popup h1 {
+  font-size: 1em;
+  background: #eee;
+  margin: 0;
+  padding: 1em;
+  text-align: center;
+}
+#settings > .popup ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+#settings > .popup ul li {
+  border-bottom: 1px dashed #eee;
+}
+#settings > .popup ul li a,
+#settings > .popup ul li a:visited {
+  text-decoration: none;
+  padding: 0.4em 1em;
+  color: #888;
+  display: block;
+  cursor: pointer;
+}
+#settings > .popup ul li a:hover {
+  color: #444;
+}
+#settings > .popup ul li:last-child {
   border-bottom: none;
 }
 #toc-wrap-wrap {
@@ -310,6 +298,8 @@ body.toc #toc {
   width: 48em;
   margin: auto;
   padding-left: 2em;
+  line-height: 1.3em;
+  background-color: transparent;
 }
 #input-wrap .CodeMirror,
 #input-wrap .CodeMirror-scroll {
