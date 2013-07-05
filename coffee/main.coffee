@@ -53,7 +53,7 @@ state = proxy
   toc: setToc
   index: setIndex
   mode: setMode
-  theme: (v) -> model.theme = c
+  theme: (v) -> model.theme = v
 
 docTitle = ->
   tmp = document.createElement 'div'
@@ -137,9 +137,12 @@ model =
       editor.setValue e.target.result
     reader.readAsText e.dataTransfer.files[0]
   settings: ->
-    model.showStores = yes
+    model.showSettings = yes
   stores: Object.keys(state_.stores).map (key) -> name: key
-  showStores: no
+  themes: [ 'serif', 'cv' ].map (name) ->
+    name: name
+    click: -> state.theme = name
+  showSettings: no
   print: -> window.print()
   mode: ''
   toggleToc: -> state.toc = not state.toc
@@ -148,7 +151,7 @@ model =
     state.mode = (if state.mode then '' else 'write')
   expandView: ->
     state.mode = (if state.mode then '' else 'read')
-  closePopups: -> model.showStores = no
+  closePopups: -> model.showSettings = no
   mouseout: (e) ->
     from = e.relatedTarget or e.toElement
     save() if not from or from.nodeName is 'HTML'

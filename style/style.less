@@ -205,21 +205,35 @@ body {
   float: right;
 }
 
-#stores {
+#settings > .popup {
   position: absolute;
   right: 0;
-  list-style: none;
-  padding: 0; margin: 0;
   background-color: #fff;
   .box-shadow(0 1px 9px -3px rgba(0, 0, 0, 0.6));
-  text-align: left;
-  li {
-    font-family: sans-serif;
-    border-bottom: 1px dashed #eee;
-    padding: 0.4em 1em;
+  font-family: sans-serif;
+  h1 {
+    font-size: 1em;
+    background: #eee;
+    margin: 0; padding: 1em;
+    text-align: center;
   }
-  li:last-child {
-    border-bottom: none;
+  ul {
+    list-style: none;
+    padding: 0; margin: 0;
+    li {
+      border-bottom: 1px dashed #eee;
+      a, a:visited {
+        text-decoration: none;
+        padding: 0.4em 1em;
+        color: #888;
+        display: block;
+        cursor: pointer;
+      }
+      a:hover { color: #444; }
+    }
+    li:last-child {
+      border-bottom: none;
+    }
   }
 }
 
