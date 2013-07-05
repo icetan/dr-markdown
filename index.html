@@ -7,10 +7,9 @@
   <meta name="viewport" content="initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,width=device-width,user-scalable=no">
 
   <link href="lib/codemirror/css/codemirror.css" rel="stylesheet"></link>
-  <link href="style/droid-sans/droid-sans.css" rel="stylesheet"></link>
   <link href="style/style.css" rel="stylesheet"></link>
 
-  <link id="theme" rel="stylesheet" href="themes/{{theme}}.css"></link>
+  <link rel="stylesheet" vx-href="themes/{{theme}}.css"></link>
 </head>
 
 <body class="noise {{mode}} {{showToc}} {{showIndex}}"
@@ -36,11 +35,6 @@
   <div id="expand-input" onclick="{{expandInput}}"></div>
 
   <div id="input-wrap">
-    <!--<div id="drag-n-drop-wrap" class="flying hidden">
-      <div id="drag-n-drop-text" class="label large">
-        Drag <i class="icon-file"></i> here
-      </div>
-    </div>-->
     <textarea id="input-md"></textarea>
   </div>
 
