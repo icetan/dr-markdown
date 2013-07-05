@@ -1,6 +1,13 @@
 xhr = (opt, callback) ->
+  method = opt.method or 'GET'
   r = new XMLHttpRequest
-  r.open opt.method or 'GET', opt.url, true
+  if 'withCredentials' of r
+    r.open method, opt.url, true
+  else if XDomainRequest?
+    r = new XDomainRequest
+    r.open method, opt.url
+  else
+    return null
   r.onreadystatechange = ->
     if r.readyState is 4
       if r.status >= 200 and r.status < 300

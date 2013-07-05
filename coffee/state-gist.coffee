@@ -1,11 +1,10 @@
 xhr = require './xhr.coffee'
-
-extend = (r={}, d) -> r[k] = v for k, v of d; r
-toDict = (array, dict={}) -> dict[kvp[0]] = kvp[1] for kvp in array; dict
-parseQuery = (s) -> toDict(kvp.split('=') for kvp in s.replace(/^\?/,'').split('&'))
-
 state = require './state.coffee'
 
+#extend = (r={}, d) -> r[k] = v for k, v of d; r
+#toDict = (array, dict={}) -> dict[kvp[0]] = kvp[1] for kvp in array; dict
+#parseQuery = (s) -> toDict(kvp.split('=') for kvp in s.replace(/^\?/,'').split('&'))
+#
 #clientId = '04c4de3332664d704642'
 #redirect = window.location.href
 #auth = ->
@@ -46,12 +45,10 @@ state.stores.gist =
     xhr.json url:'https://api.github.com/gists/'+id, (err, data) ->
       {
         files: {
-          'main.md': { raw_url:textUrl },
-          'state.json': { raw_url:stateUrl }
+          'main.md': { content:text },
+          'state.json': { content:state }
         }
       } = data
-      xhr.json url:stateUrl, (err, state) ->
-        xhr url:textUrl, (err, text) ->
-          callback { text, state }
+      callback { text, state:JSON.parse state }
 
 #setTimeout (-> auth()), 1000
