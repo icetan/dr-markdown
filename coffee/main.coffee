@@ -103,16 +103,16 @@ editor = CodeMirror.fromTextArea document.getElementById('input-md'),
   lineNumbers: no
   lineWrapping: yes
   dragDrop: no
-  onChange: ->
-    updateView()
-    if initiated
-      if saved
-        saved = no
-        updateTitle()
-      clearTimeout saveTimer
-      saveTimer = setTimeout save, 5000
-    else
+editor.on 'change', ->
+  updateView()
+  if initiated
+    if saved
+      saved = no
       updateTitle()
+    clearTimeout saveTimer
+    saveTimer = setTimeout save, 5000
+  else
+    updateTitle()
 
 restore = (data) ->
   currentText = editor.getValue()
