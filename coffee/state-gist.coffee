@@ -4,7 +4,7 @@ extend = (r={}, d) -> r[k] = v for k, v of d; r
 toDict = (array, dict={}) -> dict[kvp[0]] = kvp[1] for kvp in array; dict
 parseQuery = (s) -> toDict(kvp.split('=') for kvp in s.replace(/^\?/,'').split('&'))
 
-{state} = require './State.coffee'
+state = require './state.coffee'
 
 #clientId = '04c4de3332664d704642'
 #redirect = window.location.href

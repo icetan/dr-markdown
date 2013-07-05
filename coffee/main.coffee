@@ -3,27 +3,26 @@ Showdown = require 'showdown'
 markdown = new Showdown.converter()
 
 require './unify.coffee'
-{ State, state:state_ } = require './State.coffee'
-# require './state-gist.coffee'
+
+state_ = require './state.coffee'
+require './state-gist.coffee'
 
 {number, index, toc} = require './utils.coffee'
 
 extend = (r={}, d) -> r[k] = v for k, v of d; r
+extendA = (r={}, a) -> r[k] = v for [k, v] in a; r
 
 proxy = (dict) ->
   vault_ = {}
-  proxy_ =
-    def: (prop, callback) ->
-      Object.defineProperty proxy_, prop,
-        enumerable: true
-        set: (value) ->
-          old = vault_[prop]
-          vault_[prop] = value
-          callback value, old
-        get: -> vault_[prop]
-    toJSON: -> vault_
-  proxy_.def prop, fn for prop, fn of dict
-  proxy_
+  def_ = (prop, fn) ->
+    enumerable: true
+    set: (value) ->
+      old = vault_[prop]
+      vault_[prop] = value
+      fn value, old
+    get: -> vault_[prop]
+  Object.create Object.prototype,
+    extendA({ toJSON: value: -> vault_ }, ([prop, def_(prop, fn)] for prop, fn of dict))
 
 module.exports = ->
   updateToc = -> tocEl.innerHTML = toc viewEl

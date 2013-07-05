@@ -35,10 +35,9 @@ state.stores =
 
 state.store = (storeType, data, callback) ->
   state.storeType = storeType if storeType
-  state.stores[state.storeType].store state.storeId, data, (storeId)->
+  state.stores[state.storeType].store state.storeId, data, (storeId) ->
     state.storeId = storeId
     serialize type:state.storeType, id:storeId
-    #window.history.replaceState {}, '', type+'/'+id
     callback? storeId
 
 state.restore = (storeType, storeId, callback) ->
