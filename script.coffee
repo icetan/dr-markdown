@@ -16,12 +16,13 @@ parseHash = (hash) ->
   if typeText64?
     [type, text64] = typeText64.split ';', 2
     text = base64.decode text64
-  { toc, index, full, fullinput } = parseState state
+  { toc, index, full, fullinput, theme } = parseState state
   data =
     text:text or ''
     meta: mode: if full then 'read' else if fullinput then 'write' else ''
   data.meta.toc = toc if toc?
   data.meta.index = index if index?
+  data.meta.theme = theme if theme?
   '#base/'+base64.encode JSON.stringify data
 
 window.location.href = 'v1/'+parseHash(window.location.hash)

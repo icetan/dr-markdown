@@ -38,11 +38,13 @@
   };
 
   parseHash = function(hash) {
-    var data, full, fullinput, index, pos, res, state, text, text64, toc, type, typeText64, _ref, _ref1;
+    var data, full, fullinput, index, pos, res, state, text, text64, theme, toc, type, typeText64, _ref, _ref1;
     if (hash.charAt(0) === '#') {
       hash = hash.substring(1);
     }
-    if (!hash) return '';
+    if (!hash) {
+      return '';
+    }
     pos = hash.indexOf(';');
     if (pos === -1) {
       state = hash;
@@ -55,7 +57,7 @@
       _ref = typeText64.split(';', 2), type = _ref[0], text64 = _ref[1];
       text = base64.decode(text64);
     }
-    _ref1 = parseState(state), toc = _ref1.toc, index = _ref1.index, full = _ref1.full, fullinput = _ref1.fullinput;
+    _ref1 = parseState(state), toc = _ref1.toc, index = _ref1.index, full = _ref1.full, fullinput = _ref1.fullinput, theme = _ref1.theme;
     data = {
       text: text || '',
       meta: {
@@ -68,7 +70,10 @@
     if (index != null) {
       data.meta.index = index;
     }
-    return '#base64/' + base64.encode(JSON.stringify(data));
+    if (theme != null) {
+      data.meta.theme = theme;
+    }
+    return '#base/' + base64.encode(JSON.stringify(data));
   };
 
   window.location.href = 'v1/' + parseHash(window.location.hash);
