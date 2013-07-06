@@ -23,6 +23,6 @@ parseHash = (hash) ->
   data.meta.toc = toc if toc?
   data.meta.index = index if index?
   data.meta.theme = theme if theme?
-  '#base/'+base64.encode JSON.stringify data
+  '#base64/'+base64.encode JSON.stringify data
 
 window.location.href = 'v1/'+parseHash(window.location.hash)

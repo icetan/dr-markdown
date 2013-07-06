@@ -73,7 +73,7 @@
     if (theme != null) {
       data.meta.theme = theme;
     }
-    return '#base/' + base64.encode(JSON.stringify(data));
+    return '#base64/' + base64.encode(JSON.stringify(data));
   };
 
   window.location.href = 'v1/' + parseHash(window.location.hash);
