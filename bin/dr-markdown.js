@@ -8,7 +8,6 @@ function parse (stream) {
   stream.resume();
   stream.on('data', function (chunk) { text += chunk; });
   stream.on('end', function () {
-    console.log(text);
     var data = JSON.stringify({
           text: text,
           meta: { mode: 'read' }
