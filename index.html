@@ -38,7 +38,7 @@
   };
 
   parseHash = function(hash) {
-    var data, full, fullinput, index, pos, res, state, text, text64, theme, toc, type, typeText64, _ref, _ref1;
+    var data, full, fullinput, index, pos, state, text, text64, theme, toc, type, typeText64, _ref, _ref1;
     if (hash.charAt(0) === '#') {
       hash = hash.substring(1);
     }
@@ -52,7 +52,6 @@
       state = hash.substring(0, pos);
       typeText64 = hash.substring(pos + 1);
     }
-    res = '#base64';
     if (typeText64 != null) {
       _ref = typeText64.split(';', 2), type = _ref[0], text64 = _ref[1];
       text = base64.decode(text64);

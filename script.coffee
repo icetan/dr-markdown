@@ -12,7 +12,6 @@ parseHash = (hash) ->
   else # state and data
     state = hash.substring 0, pos
     typeText64 = hash.substring pos+1
-  res = '#base64'
   if typeText64?
     [type, text64] = typeText64.split ';', 2
     text = base64.decode text64
