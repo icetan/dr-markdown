@@ -39,9 +39,10 @@
 
   parseHash = function(hash) {
     var data, full, fullinput, index, pos, res, state, text, text64, toc, type, typeText64, _ref, _ref1;
-    if (hash.charAt(0 === '#')) {
+    if (hash.charAt(0) === '#') {
       hash = hash.substring(1);
     }
+    if (!hash) return '';
     pos = hash.indexOf(';');
     if (pos === -1) {
       state = hash;

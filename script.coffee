@@ -4,7 +4,8 @@ parseState = (str) ->
   toDict(kvp.split '=' for kvp in str.split ',' when kvp isnt '')
 
 parseHash = (hash) ->
-  hash = hash.substring 1 if hash.charAt 0 is '#'
+  hash = hash.substring 1 if hash.charAt(0) is '#'
+  return '' if not hash
   pos =  hash.indexOf ';'
   if pos is -1 # state only
     state = hash
