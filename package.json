@@ -23,7 +23,7 @@
     "uglify-js": "*"
   },
   "scripts": {
-    "install": "node_modules/.bin/browserify coffee/main.coffee -t coffeeify | node_modules/.bin/uglifyjs > script.js && node_modules/.bin/lessc style/style.less > style/style.css",
+    "build": "node_modules/.bin/browserify coffee/main.coffee -t coffeeify | node_modules/.bin/uglifyjs > script.js && node_modules/.bin/lessc style/style.less > style/style.css",
     "watch": "node_modules/.bin/watchify coffee/main.coffee -d -t coffeeify -o script.js -v"
   },
   "bin": {
