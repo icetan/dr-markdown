@@ -7,7 +7,7 @@ pad = (n, p) -> (new Array(p + 1 - n.toString().length)).join('0') + n
 rnd = -> Date.now().toString(16) + pad (Math.random()*65536|0).toString(16), 4
 
 deserialize = ->
-  [type, id] = window.location.hash.substr(1).split '/', 2
+  [type, id] = window.location.hash.substr(1).split '/'
   { type, id }
 serialize = (data) ->
   window.location.hash = '#'+data.type+(if data.id then '/'+data.id else '')
