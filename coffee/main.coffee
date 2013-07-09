@@ -172,3 +172,6 @@ state_.on 'restore', (data) ->
   restore data
 
 vixen document.body.parentNode, model
+
+window.onbeforeunload = ->
+  'You have unsaved changes.' if not saved
