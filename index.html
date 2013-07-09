@@ -16,32 +16,27 @@
       onclick="{{closePopups}}"
       onmouseout="{{mouseout}}" onkeypress="{{hotkey}}"
       ondrop="{{drop}}{{noop}}" ondragover="{{noop}}">
-  <div id="controls-wrap">
-    <div id="controls-bar" class="fade">
-      <div id="controls" >
-        <div id="settings">
-          <a class="btn uni-gear"
-            title="" onclick="{{settings}}{{stop}}"></a>
-          <div class="popup {{showSettings|show}}">
-            <h1>Themes</h1>
-            <ul data-value="theme" data-in="themes">
-              <li><a onclick="{{theme.click}}">{{theme.name}}</a></li>
-            </ul>
-            <h1>Save to</h1>
-            <ul data-value="store" data-in="stores">
-              <li><a href="#{{store.name}}">{{store.name}}</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div id="expand-view" onclick="{{expandView}}"></div>
   <div id="expand-input" onclick="{{expandInput}}"></div>
 
   <div id="input-wrap">
-    <textarea id="input-md"></textarea>
+    <div id="textarea-wrap">
+      <textarea id="input-md"></textarea>
+      <div id="settings">
+        <a class="btn uni-gear"
+          title="" onclick="{{settings}}{{stop}}"></a>
+        <div class="popup {{showSettings|show}}">
+          <h1>Themes</h1>
+          <ul data-value="theme" data-in="themes">
+            <li><a onclick="{{theme.click}}">{{theme.name}}</a></li>
+          </ul>
+          <h1>Save to</h1>
+          <ul data-value="store" data-in="stores">
+            <li><a href="#{{store.name}}">{{store.name}}</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div id="view-wrap" class="noise">

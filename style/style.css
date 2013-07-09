@@ -158,28 +158,6 @@ body {
   margin: auto;
   width: 42em;
 }
-#controls-wrap {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 3;
-  min-width: 0;
-  -webkit-transition: min-width 0.5s ease;
-  -moz-transition: min-width 0.5s ease;
-  -ms-transition: min-width 0.5s ease;
-  -o-transition: min-width 0.5s ease;
-  transition: min-width 0.5s ease;
-}
-#controls-bar {
-  padding: 0 1em 0 2em;
-  opacity: 0.4;
-}
-#controls {
-  margin: auto;
-  padding: 1em 0;
-  height: 2em;
-  width: 47em;
-}
 #modes {
   z-index: 3;
   clear: both;
@@ -205,8 +183,11 @@ body {
   text-shadow: 0 1px 0 black;
 }
 #settings {
-  position: relative;
-  float: right;
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 1em;
+  z-index: 3;
 }
 #settings > .popup {
   position: absolute;
@@ -260,8 +241,7 @@ body {
   opacity: 0.4;
 }
 body.toc #toc-wrap,
-#toc-wrap:hover,
-#controls-bar:hover {
+#toc-wrap:hover {
   background-color: rgba(0, 0, 0, 0.05);
   opacity: 1;
 }
@@ -295,9 +275,6 @@ body.toc #toc {
 }
 /* CodeMirror */
 #input-wrap .CodeMirror {
-  width: 48em;
-  margin: auto;
-  padding-left: 2em;
   line-height: 1.3em;
   background-color: transparent;
 }
@@ -313,6 +290,13 @@ body.toc #toc {
 }
 #input-wrap .CodeMirror-vscrollbar {
   z-index: -1;
+}
+#textarea-wrap {
+  position: relative;
+  width: 48em;
+  height: 100%;
+  margin: auto;
+  padding-left: 24px;
 }
 
 [class^="uni-"],
@@ -346,8 +330,7 @@ body.full-view #expand-view:before {
 body.full-input #expand-input:hover ~ #view-wrap {
   left: 90%;
 }
-body.full-input #input-wrap,
-body.full-input #controls-wrap {
+body.full-input #input-wrap {
   min-width: 100%;
 }
 body.full-input #view-wrap {
@@ -414,6 +397,7 @@ body.full-input #expand-view {
   }
   #expand-view {
     display: block;
+    width: 24px;
   }
   #view-wrap {
     left: 50em;
@@ -472,7 +456,6 @@ body.full-input #expand-view {
     margin-top: 0 !important;
     color: red;
   }
-  #controls,
   #input-wrap {
     display: none !important;
   }
