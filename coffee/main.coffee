@@ -158,15 +158,19 @@ model =
     from = e.relatedTarget or e.toElement
     save() if not from or from.nodeName is 'HTML'
   hotkey: (e) ->
+    hit = undefined
     if e.ctrlKey
       if e.altKey
-        switch e.keyCode
-          when 24 then state.mode = 'write' # ctrl+alt+x
-          when 3 then state.mode = '' # ctrl+alt+c
-          when 22 then state.mode = 'read' # ctrl+alt+v
+        hit = switch e.keyCode
+          when 24 then state.mode = 'write'; true # ctrl+alt+x
+          when 3 then state.mode = ''; true # ctrl+alt+c
+          when 22 then state.mode = 'read'; true # ctrl+alt+v
       else
-        switch e.keyCode
-          when 19 then save true
+        hit = switch e.keyCode
+          when 19 then save true; true
+    if hit
+      e.preventDefault()
+      false
 
 state_.restore null, null, (err, data) -> restore data
 state_.on 'restore', (data) ->
