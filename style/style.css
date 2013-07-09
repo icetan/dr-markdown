@@ -138,14 +138,14 @@ body {
   left: 10%;
 }
 #expand-input:before {
-  content: '❯';
-  right: 0.1em;
+  content: '〉';
+  right: 0.3em;
 }
 #expand-view {
   display: none;
 }
 #expand-view:before {
-  content: '❮';
+  content: '〈';
   left: 0.1em;
 }
 #view-wrap {
@@ -341,7 +341,7 @@ body.full-view #expand-view {
   display: block;
 }
 body.full-view #expand-view:before {
-  content: '❯';
+  content: '〉';
 }
 body.full-input #expand-input:hover ~ #view-wrap {
   left: 90%;
@@ -357,7 +357,7 @@ body.full-input #expand-input {
   right: 0;
 }
 body.full-input #expand-input:before {
-  content: '❮';
+  content: '〈';
 }
 body.full-input #expand-view {
   display: none;
