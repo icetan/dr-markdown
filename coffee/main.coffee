@@ -78,15 +78,13 @@ save = (force) ->
       saved = not err?
       updateTitle()
 
-cursorToken = '^^^cursor^^^'
 updateView = ->
   cline = editor.getCursor().line
   md = editor.getValue().split '\n'
-  md[cline] += cursorToken
+  md[cline] += '<span id="cursor"></span>'
   md = md.join '\n'
   v = viewEl
-  #v.innerHTML = markdown.makeHtml(md).replace(cursorToken, '<span id="cursor"></span>')
-  v.innerHTML = marked(md).replace cursorToken, '<span id="cursor"></span>'
+  v.innerHTML = marked md
   updateIndex() if state.index
   updateToc() if state.toc
   scrollTop = viewWrapEl.scrollTop
@@ -96,6 +94,7 @@ updateView = ->
   cursorHeight = cursorSpan.offsetHeight
   if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight - cursorHeight
     viewWrapEl.scrollTop = cursorTop - viewHeight/2
+
 updateTitle = ->
   document.title = (if saved then '' else '*')+docTitle()
 
