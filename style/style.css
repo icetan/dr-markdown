@@ -311,6 +311,10 @@ body.toc #toc {
 #input-wrap .CodeMirror-focused div.CodeMirror-selected {
   background: rgba(255, 255, 0, 0.3);
 }
+#input-wrap .CodeMirror-vscrollbar {
+  z-index: -1;
+}
+
 [class^="uni-"],
 [class*=" uni-"] {
   font-size: 24px;
