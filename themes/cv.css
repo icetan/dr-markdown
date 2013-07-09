@@ -94,14 +94,3 @@ td { vertical-align: top; }
   letter-spacing: 0.1em;
   border-bottom: 1px solid black;
 }
-
-.markdown ul, .markdown ol {
-  margin: 1em 0;
-  padding: 0;
-  list-style: none;
-}
-.markdown li {
-  display: inline-block;
-  width: 9em;
-  margin: 0.25em 1em 0 0;
-}
