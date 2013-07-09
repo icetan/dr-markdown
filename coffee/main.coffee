@@ -1,8 +1,12 @@
 require './bring-the-noise.coffee'
 
 vixen = require 'vixen'
-Showdown = require 'showdown'
-markdown = new Showdown.converter()
+marked = require 'marked'
+marked.setOptions
+  gfm: true
+  tables: true
+  breaks: true
+  smartLists: true
 
 require './unify.coffee'
 
@@ -81,7 +85,8 @@ updateView = ->
   md[cline] += cursorToken
   md = md.join '\n'
   v = viewEl
-  v.innerHTML = markdown.makeHtml(md).replace(cursorToken, '<span id="cursor"></span>')
+  #v.innerHTML = markdown.makeHtml(md).replace(cursorToken, '<span id="cursor"></span>')
+  v.innerHTML = marked(md).replace cursorToken, '<span id="cursor"></span>'
   updateIndex() if state.index
   updateToc() if state.toc
   scrollTop = viewWrapEl.scrollTop
