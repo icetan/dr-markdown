@@ -32,28 +32,26 @@ viewWrapEl = document.getElementById 'view-wrap'
 
 updateToc = -> tocEl.innerHTML = toc viewEl
 updateIndex = -> index number viewEl
-setMode = (mode) ->
-  model.mode = {
-    write: 'full-input'
-    read: 'full-view'
-  }[mode] or ''
-setToc = (to) ->
-  updateToc() if to
-  model.showToc = if to then 'toc' else ''
-setIndex = (to) ->
-  if to
-    if document.querySelectorAll('#view [data-number]').length is 0
-      updateIndex()
-      updateToc() if state.toc
-    model.showIndex = 'indexed'
-  else
-    model.showIndex = ''
 
 state = proxy
-  toc: setToc
-  index: setIndex
-  mode: setMode
-  theme: (v) -> model.theme = v
+  toc: (to) ->
+    updateToc() if to
+    model.showToc = if to then 'toc' else ''
+  index: (to) ->
+    if to
+      if document.querySelectorAll('#view [data-number]').length is 0
+        updateIndex()
+        updateToc() if state.toc
+      model.showIndex = 'indexed'
+    else
+      model.showIndex = ''
+  mode: (mode) ->
+    model.mode = {
+      write: 'full-input'
+      read: 'full-view'
+    }[mode] or ''
+  theme: (v) ->
+    model.theme = v
 
 docTitle = ->
   tmp = document.createElement 'div'
