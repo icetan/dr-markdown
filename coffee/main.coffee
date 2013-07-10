@@ -49,11 +49,14 @@ state = proxy
       model.showIndex = 'indexed'
     else
       model.showIndex = ''
-  mode: (mode) ->
+  mode: (mode, old) ->
     model.mode = {
       write: 'full-input'
       read: 'full-view'
+      present: 'present'
     }[mode] or ''
+    updateView() if old is 'present'
+  slide: (nr) -> updateView()
   theme: (v) ->
     model.theme = v
 
@@ -79,21 +82,27 @@ save = (force) ->
       updateTitle()
 
 updateView = ->
-  cline = editor.getCursor().line
-  md = editor.getValue().split '\n'
-  md[cline] += '<span id="cursor"></span>'
-  md = md.join '\n'
-  v = viewEl
-  v.innerHTML = marked md
-  updateIndex() if state.index
-  updateToc() if state.toc
-  scrollTop = viewWrapEl.scrollTop
-  viewHeight = viewWrapEl.offsetHeight
-  cursorSpan = document.getElementById 'cursor'
-  cursorTop = cursorSpan.offsetTop
-  cursorHeight = cursorSpan.offsetHeight
-  if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight - cursorHeight
-    viewWrapEl.scrollTop = cursorTop - viewHeight/2
+  if state.mode is 'present'
+    md = editor.getValue().split /\n\s*\n\s*----*\s*\n/
+    if state.slide < md.length
+      viewEl.innerHTML = marked md[state.slide || 0]
+    else
+      state.slide = md.length - 1
+  else
+    cline = editor.getCursor().line
+    md = editor.getValue().split '\n'
+    md[cline] += '<span id="cursor"></span>'
+    md = md.join '\n'
+    viewEl.innerHTML = marked md
+    updateIndex() if state.index
+    updateToc() if state.toc
+    scrollTop = viewWrapEl.scrollTop
+    viewHeight = viewWrapEl.offsetHeight
+    cursorSpan = document.getElementById 'cursor'
+    cursorTop = cursorSpan.offsetTop
+    cursorHeight = cursorSpan.offsetHeight
+    if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight - cursorHeight
+      viewWrapEl.scrollTop = cursorTop - viewHeight/2
 
 updateTitle = ->
   document.title = (if saved then '' else '*')+docTitle()
@@ -149,6 +158,9 @@ model =
   mode: ''
   toggleToc: -> state.toc = not state.toc
   toggleIndex: -> state.index = not state.index
+  gotoPresent: ->
+    state.mode = 'present'
+    updateView()
   expandInput: ->
     state.mode = (if state.mode then '' else 'write')
   expandView: ->
@@ -157,16 +169,26 @@ model =
   mouseout: (e) ->
     from = e.relatedTarget or e.toElement
     save() if not from or from.nodeName is 'HTML'
-  hotkey: (e) ->
+  hotkeyCombo: (e) ->
+    hit = undefined
     if e.ctrlKey
       if e.altKey
-        switch e.keyCode
-          when 24 then state.mode = 'write' # ctrl+alt+x
-          when 3 then state.mode = '' # ctrl+alt+c
-          when 22 then state.mode = 'read' # ctrl+alt+v
+        hit = switch e.keyCode
+          when 26 then model.gotoPresent(); true # ctrl+alt+z
+          when 24 then state.mode = 'write'; true # ctrl+alt+x
+          when 3 then state.mode = ''; true # ctrl+alt+c
+          when 22 then state.mode = 'read'; true # ctrl+alt+v
       else
-        switch e.keyCode
-          when 19 then save true
+        hit = switch e.keyCode
+          when 19 then save true; true
+    e.preventDefault() if hit
+  hotkey: (e) ->
+    hit = undefined
+    if state.mode is 'present'
+      hit = switch e.keyCode
+        when 32, 39 then state.slide = (state.slide || 0)+1; true # space, ->
+        when 37 then state.slide = Math.max (state.slide || 0)-1, 0; true # <-
+    e.preventDefault() if hit
 
 state_.restore null, null, (err, data) -> restore data
 state_.on 'restore', (data) ->
