@@ -13,8 +13,8 @@
 </head>
 
 <body class="noise {{mode}} {{showToc}} {{showIndex}}"
-      onclick="{{closePopups}}"
-      onmouseout="{{mouseout}}" onkeypress="{{hotkey}}"
+      onclick="{{closePopups}}" onmouseout="{{mouseout}}"
+      onkeypress="{{hotkeyCombo}}" onkeydown="{{hotkey}}"
       ondrop="{{drop}}{{noop}}" ondragover="{{noop}}">
   <div id="expand-view" onclick="{{expandView}}"></div>
   <div id="expand-input" onclick="{{expandInput}}"></div>
@@ -26,6 +26,9 @@
         <a class="btn fade uni-gear"
           title="" onclick="{{settings}}{{stop}}"></a>
         <div class="popup {{showSettings|show}}">
+          <ul>
+            <li><a onclick="{{gotoPresent}}">slide</a></li>
+          </ul>
           <h1>Themes</h1>
           <ul data-value="theme" data-in="themes">
             <li><a onclick="{{theme.click}}">{{theme.name}}</a></li>
