@@ -49,12 +49,13 @@ state = proxy
       model.showIndex = 'indexed'
     else
       model.showIndex = ''
-  mode: (mode) ->
+  mode: (mode, old) ->
     model.mode = {
       write: 'full-input'
       read: 'full-view'
       present: 'present'
     }[mode] or ''
+    updateView() if old is 'present'
   slide: (nr) -> updateView()
   theme: (v) ->
     model.theme = v
