@@ -1,3 +1,6 @@
 [submodule "v1"]
 	path = v1
 	url = https://github.com/icetan/dr-markdown.git
+[submodule "v2"]
+	path = v2
+	url = https://github.com/icetan/dr-markdown.git
