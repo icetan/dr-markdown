@@ -378,6 +378,9 @@ body.present #toc-wrap-wrap {
 body.present #view {
   font-size: 2.1vw !important;
 }
+body.present #view img {
+  width: 100%;
+}
 .scale {
   -webkit-transition: font-size 0.3s, width 0.3s, background-color 0.3s, opacity 0.3s;
   -moz-transition: font-size 0.3s, width 0.3s, background-color 0.3s, opacity 0.3s;
