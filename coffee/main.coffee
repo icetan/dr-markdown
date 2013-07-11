@@ -123,6 +123,9 @@ updateThemes = ->
     active: state.theme is name
     click: -> state.theme = name
 
+nextSlide = -> state.slide = (state.slide || 0)+1
+prevSlide = -> state.slide = Math.max (state.slide || 0)-1, 0
+
 saveTimer = null
 editor = CodeMirror.fromTextArea document.getElementById('input-md'),
   mode: 'gfm'
@@ -173,11 +176,11 @@ model =
   toggleToc: -> state.toc = not state.toc
   toggleIndex: -> state.index = not state.index
   gotoPresent: -> state.mode = 'present'
-  expandInput: ->
-    state.mode = (if state.mode then '' else 'write')
-  expandView: ->
-    state.mode = (if state.mode then '' else 'read')
-  closePopups: -> model.showSettings = no
+  expandInput: -> state.mode = (if state.mode then '' else 'write')
+  expandView: -> state.mode = (if state.mode then '' else 'read')
+  closePopups: ->
+    model.showSettings = no
+    nextSlide() if state.mode is 'present'
   mouseout: (e) ->
     from = e.relatedTarget or e.toElement
     save() if not from or from.nodeName is 'HTML'
@@ -190,16 +193,16 @@ model =
           when 24 then state.mode = 'write'; true # ctrl+alt+x
           when 3 then state.mode = ''; true # ctrl+alt+c
           when 22 then state.mode = 'read'; true # ctrl+alt+v
-      else
-        hit = switch e.keyCode
           when 19 then save true; true
     e.preventDefault() if hit
   hotkey: (e) ->
     hit = undefined
     if state.mode is 'present'
+      console.log e.keyCode
       hit = switch e.keyCode
-        when 32, 39 then state.slide = (state.slide || 0)+1; true # space, ->
-        when 37 then state.slide = Math.max (state.slide || 0)-1, 0; true # <-
+        when 32, 39 then nextSlide(); true # space, ->
+        when 37 then prevSlide(); true # <-
+        when 27 then state.mode = ''; true # esc
     e.preventDefault() if hit
 
 state_.restore null, null, (err, data) -> restore data
