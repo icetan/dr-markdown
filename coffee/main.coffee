@@ -81,7 +81,7 @@ saved = yes
 
 save = (force) ->
   if not saved or force
-    state_.store null,
+    state_.store
       text: editor.getValue()
       meta: extend state, title:docTitle(), autosave:not force
     ,(err, id) ->
@@ -174,8 +174,8 @@ model =
   stores: Object.keys(state_.stores).map (key) ->
     name: key
     click: ->
-      history.replaceState {}, null, '?store='+key
-      state_.restore null, null, (err, data) -> restore data
+      state_.serialize type:key
+      save true
   showSettings: no
   print: -> window.print()
   mode: ''
@@ -210,7 +210,7 @@ model =
         when 27 then state.mode = ''; true # esc
     e.preventDefault() if hit
 
-state_.restore null, null, (err, data) -> restore data
+state_.restore (err, data) -> restore data
 
 vixen document.body.parentNode, model
 
