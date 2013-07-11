@@ -5,6 +5,12 @@ deserializeV1 = ->
   id: if pos is -1 then undefined else hash.substr pos+1
 
 serializeV2 = (data) ->
-  window.location.href = '../v2/'+(if data.type then '?store='+data.type+(if data.id then '&id='+data.id else '') else '')
+  window.location.href = '../v2/' +
+    (if data.type
+      '?type=' + data.type +
+      (if data.id
+        (if data.type is 'base64' then '#' else '&id=') + data.id
+      else '')
+    else '')
 
 serializeV2 deserializeV1()
