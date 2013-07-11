@@ -320,15 +320,21 @@ body.toc #toc {
   font-size: 24px;
   line-height: 1em;
 }
-.uni-gear:before {
-  content: '⚙';
-  font-size: 1.4em;
+.uni-settings:before {
+  content: '☤';
+  font-size: 2.4em;
+  line-height: 1em;
 }
 .uni-list:before {
   content: '☰';
 }
 .uni-number:before {
   content: '#';
+}
+.ok:before {
+  font-size: 1em;
+  line-height: 1em;
+  content: '✓';
 }
 /* Fullscreen modes */
 body.full-view #expand-view:hover ~ #view-wrap,
@@ -371,6 +377,9 @@ body.present #toc-wrap-wrap {
 }
 body.present #view {
   font-size: 2.1vw !important;
+}
+body.present #view img {
+  width: 100%;
 }
 .scale {
   -webkit-transition: font-size 0.3s, width 0.3s, background-color 0.3s, opacity 0.3s;

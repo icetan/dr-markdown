@@ -3,10 +3,10 @@ require './bring-the-noise.coffee'
 vixen = require 'vixen'
 marked = require 'marked'
 marked.setOptions
-  gfm: true
-  tables: true
-  breaks: true
-  smartLists: true
+  gfm: yes
+  tables: yes
+  breaks: no
+  smartLists: yes
 
 require './unify.coffee'
 
@@ -55,10 +55,17 @@ state = proxy
       read: 'full-view'
       present: 'present'
     }[mode] or ''
-    updateView() if old is 'present'
+    if mode in ['read', 'present']
+      editor.setOption 'readOnly', 'nocursor'
+      updateView()
+    else if mode in ['write', '']
+      editor.setOption 'readOnly', no
+      editor.focus()
+      updateView true if mode is ''
   slide: (nr) -> updateView()
   theme: (v) ->
     model.theme = v
+    updateThemes()
 
 docTitle = ->
   tmp = document.createElement 'div'
@@ -81,32 +88,44 @@ save = (force) ->
       saved = not err?
       updateTitle()
 
-updateView = ->
-  if state.mode is 'present'
-    md = editor.getValue().split /\n\s*\n\s*----*\s*\n/
-    if state.slide < md.length
-      viewEl.innerHTML = marked md[state.slide || 0]
+updateView = (force) ->
+  switch
+    when force or state.mode in ['read', 'write']
+      viewEl.innerHTML = marked editor.getValue()
+    when state.mode is 'present'
+      md = editor.getValue().split /\n\s*\n\s*(?:[-*]\s*){3,}\n/
+      if state.slide < md.length
+        viewEl.innerHTML = marked md[state.slide || 0]
+      else
+        state.slide = md.length - 1
     else
-      state.slide = md.length - 1
-  else
-    cline = editor.getCursor().line
-    md = editor.getValue().split '\n'
-    md[cline] += '<span id="cursor"></span>'
-    md = md.join '\n'
-    viewEl.innerHTML = marked md
-    updateIndex() if state.index
-    updateToc() if state.toc
-    scrollTop = viewWrapEl.scrollTop
-    viewHeight = viewWrapEl.offsetHeight
-    cursorSpan = document.getElementById 'cursor'
-    cursorTop = cursorSpan.offsetTop
-    cursorHeight = cursorSpan.offsetHeight
-    if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight - cursorHeight
-      viewWrapEl.scrollTop = cursorTop - viewHeight/2
+      cline = editor.getCursor().line
+      md = editor.getValue().split '\n'
+      md[cline] += '<span id="cursor"></span>'
+      md = md.join '\n'
+      viewEl.innerHTML = marked md
+      updateIndex() if state.index
+      updateToc() if state.toc
+      scrollTop = viewWrapEl.scrollTop
+      viewHeight = viewWrapEl.offsetHeight
+      cursorSpan = document.getElementById 'cursor'
+      cursorTop = cursorSpan.offsetTop
+      cursorHeight = cursorSpan.offsetHeight
+      if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight - cursorHeight
+        viewWrapEl.scrollTop = cursorTop - viewHeight/2
 
-updateTitle = ->
-  document.title = (if saved then '' else '*')+docTitle()
+updateTitle = -> document.title = (if saved then '' else '*')+docTitle()
 
+updateThemes = ->
+  model.themes = [ 'serif', 'cv' ].map (name) ->
+    name: name
+    active: state.theme is name
+    click: -> state.theme = name
+
+nextSlide = -> state.slide = (state.slide || 0)+1
+prevSlide = -> state.slide = Math.max (state.slide || 0)-1, 0
+
+correctionTimer = null
 saveTimer = null
 editor = CodeMirror.fromTextArea document.getElementById('input-md'),
   mode: 'gfm'
@@ -114,12 +133,15 @@ editor = CodeMirror.fromTextArea document.getElementById('input-md'),
   lineNumbers: no
   lineWrapping: yes
   dragDrop: no
+  autofocus: yes
 editor.on 'change', ->
   updateView()
   if initiated
     if saved
       saved = no
       updateTitle()
+    clearTimeout correctionTimer
+    correctionTimer = setTimeout (-> updateView true), 1000
     clearTimeout saveTimer
     saveTimer = setTimeout save, 5000
   else
@@ -129,11 +151,11 @@ restore = (data) ->
   currentText = editor.getValue()
   if data
     { text, meta } = data
-    extend state, meta or {}
+    extend state, extend({theme:'serif'}, meta or {})
     editor.setValue text if text? and text isnt currentText
-  else if currentText
-    save true
-  model.theme = state.theme or 'serif'
+  else
+    state.theme = 'serif'
+    save true if currentText
   initiated = yes
 
 model =
@@ -150,22 +172,17 @@ model =
   settings: ->
     model.showSettings = yes
   stores: Object.keys(state_.stores).map (key) -> name: key
-  themes: [ 'serif', 'cv' ].map (name) ->
-    name: name
-    click: -> state.theme = name
   showSettings: no
   print: -> window.print()
   mode: ''
   toggleToc: -> state.toc = not state.toc
   toggleIndex: -> state.index = not state.index
-  gotoPresent: ->
-    state.mode = 'present'
-    updateView()
-  expandInput: ->
-    state.mode = (if state.mode then '' else 'write')
-  expandView: ->
-    state.mode = (if state.mode then '' else 'read')
-  closePopups: -> model.showSettings = no
+  gotoPresent: -> state.mode = 'present'
+  expandInput: -> state.mode = (if state.mode then '' else 'write')
+  expandView: -> state.mode = (if state.mode then '' else 'read')
+  closePopups: ->
+    model.showSettings = no
+    nextSlide() if state.mode is 'present'
   mouseout: (e) ->
     from = e.relatedTarget or e.toElement
     save() if not from or from.nodeName is 'HTML'
@@ -174,20 +191,20 @@ model =
     if e.ctrlKey
       if e.altKey
         hit = switch e.keyCode
-          when 26 then model.gotoPresent(); true # ctrl+alt+z
+          when 26 then state.mode = 'present'; true # ctrl+alt+z
           when 24 then state.mode = 'write'; true # ctrl+alt+x
           when 3 then state.mode = ''; true # ctrl+alt+c
           when 22 then state.mode = 'read'; true # ctrl+alt+v
-      else
-        hit = switch e.keyCode
           when 19 then save true; true
     e.preventDefault() if hit
   hotkey: (e) ->
     hit = undefined
     if state.mode is 'present'
+      console.log e.keyCode
       hit = switch e.keyCode
-        when 32, 39 then state.slide = (state.slide || 0)+1; true # space, ->
-        when 37 then state.slide = Math.max (state.slide || 0)-1, 0; true # <-
+        when 32, 39 then nextSlide(); true # space, ->
+        when 37 then prevSlide(); true # <-
+        when 27 then state.mode = ''; true # esc
     e.preventDefault() if hit
 
 state_.restore null, null, (err, data) -> restore data
