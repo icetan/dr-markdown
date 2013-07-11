@@ -1,4 +1,4 @@
-Dr. Markdown <b style="font-size:2em; font-weight: lighter; line-height: 0.5em; display:inline-block;">☤</b>
+Dr. Markdown <big>☤</big>
 ============
 
 *Web based markdown editor.*
