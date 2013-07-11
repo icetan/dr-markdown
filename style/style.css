@@ -331,6 +331,11 @@ body.toc #toc {
 .uni-number:before {
   content: '#';
 }
+.ok:before {
+  font-size: 1em;
+  line-height: 1em;
+  content: '✓';
+}
 /* Fullscreen modes */
 body.full-view #expand-view:hover ~ #view-wrap,
 body.present #expand-view:hover ~ #view-wrap {

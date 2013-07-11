@@ -59,6 +59,7 @@ state = proxy
   slide: (nr) -> updateView()
   theme: (v) ->
     model.theme = v
+    updateThemes()
 
 docTitle = ->
   tmp = document.createElement 'div'
@@ -107,6 +108,12 @@ updateView = ->
 updateTitle = ->
   document.title = (if saved then '' else '*')+docTitle()
 
+updateThemes = ->
+  model.themes = [ 'serif', 'cv' ].map (name) ->
+    name: name
+    active: state.theme is name
+    click: -> state.theme = name
+
 saveTimer = null
 editor = CodeMirror.fromTextArea document.getElementById('input-md'),
   mode: 'gfm'
@@ -129,11 +136,11 @@ restore = (data) ->
   currentText = editor.getValue()
   if data
     { text, meta } = data
-    extend state, meta or {}
+    extend state, extend({theme:'serif'}, meta or {})
     editor.setValue text if text? and text isnt currentText
-  else if currentText
-    save true
-  model.theme = state.theme or 'serif'
+  else
+    state.theme = 'serif'
+    save true if currentText
   initiated = yes
 
 model =
@@ -150,9 +157,6 @@ model =
   settings: ->
     model.showSettings = yes
   stores: Object.keys(state_.stores).map (key) -> name: key
-  themes: [ 'serif', 'cv' ].map (name) ->
-    name: name
-    click: -> state.theme = name
   showSettings: no
   print: -> window.print()
   mode: ''
