@@ -55,7 +55,13 @@ state = proxy
       read: 'full-view'
       present: 'present'
     }[mode] or ''
-    updateView() if old is 'present'
+    if mode in ['read', 'present']
+      editor.setOption 'readOnly', 'nocursor'
+      updateView()
+    else if mode in ['write', '']
+      editor.setOption 'readOnly', no
+      editor.focus()
+      updateView() if mode is ''
   slide: (nr) -> updateView()
   theme: (v) ->
     model.theme = v
@@ -83,27 +89,30 @@ save = (force) ->
       updateTitle()
 
 updateView = ->
-  if state.mode is 'present'
-    md = editor.getValue().split /\n\s*\n\s*----*\s*\n/
-    if state.slide < md.length
-      viewEl.innerHTML = marked md[state.slide || 0]
+  switch state.mode
+    when 'present'
+      md = editor.getValue().split /\n\s*\n\s*(?:[-*]\s*){3,}\n/
+      if state.slide < md.length
+        viewEl.innerHTML = marked md[state.slide || 0]
+      else
+        state.slide = md.length - 1
+    when 'read', 'write'
+      viewEl.innerHTML = marked editor.getValue()
     else
-      state.slide = md.length - 1
-  else
-    cline = editor.getCursor().line
-    md = editor.getValue().split '\n'
-    md[cline] += '<span id="cursor"></span>'
-    md = md.join '\n'
-    viewEl.innerHTML = marked md
-    updateIndex() if state.index
-    updateToc() if state.toc
-    scrollTop = viewWrapEl.scrollTop
-    viewHeight = viewWrapEl.offsetHeight
-    cursorSpan = document.getElementById 'cursor'
-    cursorTop = cursorSpan.offsetTop
-    cursorHeight = cursorSpan.offsetHeight
-    if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight - cursorHeight
-      viewWrapEl.scrollTop = cursorTop - viewHeight/2
+      cline = editor.getCursor().line
+      md = editor.getValue().split '\n'
+      md[cline] += '<span id="cursor"></span>'
+      md = md.join '\n'
+      viewEl.innerHTML = marked md
+      updateIndex() if state.index
+      updateToc() if state.toc
+      scrollTop = viewWrapEl.scrollTop
+      viewHeight = viewWrapEl.offsetHeight
+      cursorSpan = document.getElementById 'cursor'
+      cursorTop = cursorSpan.offsetTop
+      cursorHeight = cursorSpan.offsetHeight
+      if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight - cursorHeight
+        viewWrapEl.scrollTop = cursorTop - viewHeight/2
 
 updateTitle = ->
   document.title = (if saved then '' else '*')+docTitle()
@@ -121,6 +130,7 @@ editor = CodeMirror.fromTextArea document.getElementById('input-md'),
   lineNumbers: no
   lineWrapping: yes
   dragDrop: no
+  autofocus: yes
 editor.on 'change', ->
   updateView()
   if initiated
@@ -162,9 +172,7 @@ model =
   mode: ''
   toggleToc: -> state.toc = not state.toc
   toggleIndex: -> state.index = not state.index
-  gotoPresent: ->
-    state.mode = 'present'
-    updateView()
+  gotoPresent: -> state.mode = 'present'
   expandInput: ->
     state.mode = (if state.mode then '' else 'write')
   expandView: ->
@@ -178,7 +186,7 @@ model =
     if e.ctrlKey
       if e.altKey
         hit = switch e.keyCode
-          when 26 then model.gotoPresent(); true # ctrl+alt+z
+          when 26 then state.mode = 'present'; true # ctrl+alt+z
           when 24 then state.mode = 'write'; true # ctrl+alt+x
           when 3 then state.mode = ''; true # ctrl+alt+c
           when 22 then state.mode = 'read'; true # ctrl+alt+v
