@@ -61,7 +61,7 @@ state = proxy
     else if mode in ['write', '']
       editor.setOption 'readOnly', no
       editor.focus()
-      updateView() if mode is ''
+      updateView true if mode is ''
   slide: (nr) -> updateView()
   theme: (v) ->
     model.theme = v
@@ -88,16 +88,16 @@ save = (force) ->
       saved = not err?
       updateTitle()
 
-updateView = ->
-  switch state.mode
-    when 'present'
+updateView = (force) ->
+  switch
+    when force or state.mode in ['read', 'write']
+      viewEl.innerHTML = marked editor.getValue()
+    when state.mode is 'present'
       md = editor.getValue().split /\n\s*\n\s*(?:[-*]\s*){3,}\n/
       if state.slide < md.length
         viewEl.innerHTML = marked md[state.slide || 0]
       else
         state.slide = md.length - 1
-    when 'read', 'write'
-      viewEl.innerHTML = marked editor.getValue()
     else
       cline = editor.getCursor().line
       md = editor.getValue().split '\n'
@@ -114,8 +114,7 @@ updateView = ->
       if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight - cursorHeight
         viewWrapEl.scrollTop = cursorTop - viewHeight/2
 
-updateTitle = ->
-  document.title = (if saved then '' else '*')+docTitle()
+updateTitle = -> document.title = (if saved then '' else '*')+docTitle()
 
 updateThemes = ->
   model.themes = [ 'serif', 'cv' ].map (name) ->
@@ -126,6 +125,7 @@ updateThemes = ->
 nextSlide = -> state.slide = (state.slide || 0)+1
 prevSlide = -> state.slide = Math.max (state.slide || 0)-1, 0
 
+correctionTimer = null
 saveTimer = null
 editor = CodeMirror.fromTextArea document.getElementById('input-md'),
   mode: 'gfm'
@@ -140,6 +140,8 @@ editor.on 'change', ->
     if saved
       saved = no
       updateTitle()
+    clearTimeout correctionTimer
+    correctionTimer = setTimeout (-> updateView true), 1000
     clearTimeout saveTimer
     saveTimer = setTimeout save, 5000
   else
