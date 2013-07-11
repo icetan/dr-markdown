@@ -3,10 +3,10 @@ require './bring-the-noise.coffee'
 vixen = require 'vixen'
 marked = require 'marked'
 marked.setOptions
-  gfm: true
-  tables: true
-  breaks: true
-  smartLists: true
+  gfm: yes
+  tables: yes
+  breaks: no
+  smartLists: yes
 
 require './unify.coffee'
 
