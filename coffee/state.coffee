@@ -6,13 +6,16 @@ base64 = require '../lib/base64'
 pad = (n, p) -> (new Array(p + 1 - n.toString().length)).join('0') + n
 rnd = -> Date.now().toString(16) + pad (Math.random()*65536|0).toString(16), 4
 
+toDict = (array, dict={}) -> dict[kvp[0]] = kvp[1] for kvp in array; dict
+parseQuery = (s) -> toDict(kvp.split('=') for kvp in s.replace(/^\?/,'').split('&'))
+
 deserialize = ->
-  hash = window.location.hash.substr 1
-  pos = hash.indexOf '/'
-  type: if pos is -1 then hash else hash.substr 0, pos
-  id: if pos is -1 then undefined else hash.substr pos+1
+  query = parseQuery window.location.search
+  type: query.store
+  id: query.id
 serialize = (data) ->
-  window.location.hash = '#'+data.type+(if data.id then '/'+data.id else '')
+  history.replaceState {}, null,
+    '?store='+data.type+(if data.id then '&id='+data.id else '')
 
 module.exports = state = new EventEmitter
 
@@ -25,7 +28,7 @@ state.stores =
   #  restore: (data, fn) -> fn lzw.decode base64.decode data
   base64:
     store: (id, data, callback) ->
-      callback null, base64.encode JSON.stringify(data or '{}')
+      callback null, base64.encode(JSON.stringify(data or '{}')).replace(/\=+$/, '')
     restore: (id, callback) ->
       callback null, JSON.parse base64.decode(id) or '{}'
   local:
@@ -61,9 +64,3 @@ state.restore = (storeType, storeId, callback) ->
       callback err, data
   else
     callback()
-
-window.addEventListener 'hashchange', ->
-  { type:storeType, id:storeId } = deserialize()
-  if storeType isnt state.storeType or storeId isnt state.storeId
-    state.restore storeType, storeId, (err, data) ->
-      state.emit 'restore', data if not err?

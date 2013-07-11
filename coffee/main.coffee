@@ -171,7 +171,11 @@ model =
     reader.readAsText e.dataTransfer.files[0]
   settings: ->
     model.showSettings = yes
-  stores: Object.keys(state_.stores).map (key) -> name: key
+  stores: Object.keys(state_.stores).map (key) ->
+    name: key
+    click: ->
+      history.replaceState {}, null, '?store='+key
+      state_.restore null, null, (err, data) -> restore data
   showSettings: no
   print: -> window.print()
   mode: ''
@@ -208,9 +212,6 @@ model =
     e.preventDefault() if hit
 
 state_.restore null, null, (err, data) -> restore data
-state_.on 'restore', (data) ->
-  initiated = no
-  restore data
 
 vixen document.body.parentNode, model
 
