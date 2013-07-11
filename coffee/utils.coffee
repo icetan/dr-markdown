@@ -1,3 +1,5 @@
+slug = (str) -> str.trim().replace(/\s+/g,'-').toLowerCase()
+
 module.exports = 
   getCursorPosition: (el) ->
     pos = 0
@@ -51,8 +53,11 @@ module.exports =
                    """ + e.innerHTML
     el
 
+  slug: slug
+
   toc: (el) ->
     '<ul>' + (for e in el.querySelectorAll('H1,H2,H3,H4,H5,H6')
+      e.id = slug e.textContent
       """
       <li><a href="##{e.id}"><#{e.tagName}>
       #{e.innerHTML}
