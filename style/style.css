@@ -320,9 +320,10 @@ body.toc #toc {
   font-size: 24px;
   line-height: 1em;
 }
-.uni-gear:before {
-  content: '⚙';
-  font-size: 1.4em;
+.uni-settings:before {
+  content: '☤';
+  font-size: 2.4em;
+  line-height: 1em;
 }
 .uni-list:before {
   content: '☰';
