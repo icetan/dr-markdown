@@ -204,7 +204,6 @@ model =
   hotkey: (e) ->
     hit = undefined
     if state.mode is 'present'
-      console.log e.keyCode
       hit = switch e.keyCode
         when 32, 39 then nextSlide(); true # space, ->
         when 37 then prevSlide(); true # <-
