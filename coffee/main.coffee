@@ -88,14 +88,19 @@ save = (force) ->
       saved = not err?
       updateTitle()
 
+setViewHtml = (html) ->
+  viewEl.innerHTML = html
+  updateIndex() if state.index
+  updateToc() if state.toc
+
 updateView = (force) ->
   switch
     when force or state.mode in ['read', 'write']
-      viewEl.innerHTML = marked editor.getValue()
+      setViewHtml marked editor.getValue()
     when state.mode is 'present'
       md = editor.getValue().split /\n\s*\n\s*(?:[-*]\s*){3,}\n/
       if state.slide < md.length
-        viewEl.innerHTML = marked md[state.slide || 0]
+        setViewHtml marked md[state.slide || 0]
       else
         state.slide = md.length - 1
     else
@@ -103,9 +108,7 @@ updateView = (force) ->
       md = editor.getValue().split '\n'
       md[cline] += '<span id="cursor"></span>'
       md = md.join '\n'
-      viewEl.innerHTML = marked md
-      updateIndex() if state.index
-      updateToc() if state.toc
+      setViewHtml marked md
       scrollTop = viewWrapEl.scrollTop
       viewHeight = viewWrapEl.offsetHeight
       cursorSpan = document.getElementById 'cursor'
