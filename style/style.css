@@ -62,7 +62,11 @@ a.btn:hover {
   display: none;
 }
 .indexed .index {
-  display: inline;
+  display: inline-block;
+  position: absolute;
+  margin-left: -410px;
+  width: 400px;
+  text-align: right;
 }
 textarea:focus,
 input:focus {
