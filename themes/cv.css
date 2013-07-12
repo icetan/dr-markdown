@@ -84,7 +84,8 @@ img {
   vertical-align: middle;
 }
 
-table { border-collapse: collapse; border-spacing: 0; }
+table { border-collapse: collapse; border-spacing: 0; width: 100%; }
+th { text-align: left; }
 td { vertical-align: top; }
 
 .markdown h1{
