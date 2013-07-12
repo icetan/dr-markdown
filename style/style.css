@@ -464,7 +464,7 @@ body.present #view img {
 @media print {
   @page  {
     size: auto;
-    margin: 20mm 25mm 20mm 25mm;
+    margin: 15mm 15mm 15mm 15mm;
   }
   html,
   body {
@@ -472,7 +472,7 @@ body.present #view img {
     overflow: auto !important;
   }
   body {
-    font-size: 14pt !important;
+    font-size: 12pt !important;
     margin: 0 !important;
     padding: 0 !important;
     background-color: transparent !important;
