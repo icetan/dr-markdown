@@ -13,7 +13,7 @@ require './unify.coffee'
 state_ = require './state.coffee'
 require './state-gist.coffee'
 
-{number, index, toc} = require './utils.coffee'
+{link, number, index, toc} = require './utils.coffee'
 
 extend = (r={}, d) -> r[k] = v for k, v of d when v?; r
 extendA = (r={}, a) -> r[k] = v for [k, v] in a when v?; r
@@ -90,6 +90,7 @@ save = (force) ->
 
 setViewHtml = (html) ->
   viewEl.innerHTML = html
+  link viewEl.querySelectorAll 'H1,H2,H3,H4,H5,H6'
   updateIndex() if state.index
   updateToc() if state.toc
 
