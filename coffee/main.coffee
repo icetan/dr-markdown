@@ -13,7 +13,7 @@ require './unify.coffee'
 state_ = require './state.coffee'
 require './state-gist.coffee'
 
-{link, number, index, toc} = require './utils.coffee'
+{link, number, index, toc, offset} = require './utils.coffee'
 
 extend = (r={}, d) -> r[k] = v for k, v of d when v?; r
 extendA = (r={}, a) -> r[k] = v for [k, v] in a when v?; r
@@ -94,6 +94,7 @@ setViewHtml = (html) ->
   updateIndex() if state.index
   updateToc() if state.toc
 
+lastLine = null
 updateView = (force) ->
   switch
     when force or state.mode in ['read', 'write']
@@ -106,17 +107,20 @@ updateView = (force) ->
         state.slide = md.length - 1
     else
       cline = editor.getCursor().line
-      md = editor.getValue().split '\n'
-      md[cline] += '<span id="cursor"></span>'
-      md = md.join '\n'
-      setViewHtml marked md
-      scrollTop = viewWrapEl.scrollTop
-      viewHeight = viewWrapEl.offsetHeight
-      cursorSpan = document.getElementById 'cursor'
-      cursorTop = cursorSpan.offsetTop
-      cursorHeight = cursorSpan.offsetHeight
-      if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight - cursorHeight
-        viewWrapEl.scrollTop = cursorTop - viewHeight/2
+      if cline isnt lastLine
+        lastLine = cline
+        md = editor.getValue().split '\n'
+        md[cline] += '<span id="cursor"></span>'
+        md = md.join '\n'
+        setViewHtml marked md
+        scrollTop = viewWrapEl.scrollTop
+        viewHeight = viewWrapEl.offsetHeight
+        cursorSpan = document.getElementById 'cursor'
+        cursorTop = offset(cursorSpan).top
+        #cursorHeight = cursorSpan.offsetHeight
+        if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight #- cursorHeight
+          viewWrapEl.scrollTop = cursorTop - viewHeight/2
+      setViewHtml marked editor.getValue()
 
 updateTitle = -> document.title = (if saved then '' else '*')+docTitle()
 
@@ -129,7 +133,6 @@ updateThemes = ->
 nextSlide = -> state.slide = (state.slide || 0)+1
 prevSlide = -> state.slide = Math.max (state.slide || 0)-1, 0
 
-correctionTimer = null
 saveTimer = null
 editor = CodeMirror.fromTextArea document.getElementById('input-md'),
   mode: 'gfm'
@@ -144,8 +147,6 @@ editor.on 'change', ->
     if saved
       saved = no
       updateTitle()
-    clearTimeout correctionTimer
-    correctionTimer = setTimeout (-> updateView true), 1000
     clearTimeout saveTimer
     saveTimer = setTimeout save, 5000
   else

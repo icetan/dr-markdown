@@ -71,3 +71,10 @@ module.exports =
       </#{e.tagName}></a></li>
       """
     ).join('') + '</ul>'
+
+  offset: (el) ->
+    pos = left:el.offsetLeft, top:el.offsetTop
+    while (el = el.offsetParent)
+      pos.left += el.offsetLeft or 0
+      pos.top += el.offsetTop or 0
+    pos
