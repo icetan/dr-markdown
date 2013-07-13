@@ -63,10 +63,15 @@ a.btn:hover {
 }
 .indexed .index {
   display: inline-block;
-  position: absolute;
-  margin-left: -410px;
-  width: 400px;
-  text-align: right;
+  margin-right: 0.5em;
+  font-weight: normal;
+  /* position: absolute; left: -12%; */
+  /* width: 11%; text-align: right; */
+}
+/* .indexed #toc { padding-left: 7em; } */
+.indexed ol { list-style: none; }
+[data-number] {
+  position: relative;
 }
 textarea:focus,
 input:focus {
@@ -292,6 +297,15 @@ body.toc #toc {
   margin: 0;
   padding-left: 0;
   list-style: none;
+}
+#toc h1,
+#toc h2,
+#toc h3,
+#toc h4,
+#toc h5,
+#toc h6 {
+  position: relative;
+  margin: 0.5em 0;
 }
 /* CodeMirror */
 #input-wrap .CodeMirror {
