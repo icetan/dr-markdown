@@ -1,14 +1,18 @@
 base64 = require '../lib/base64'
 #lzw = require '../lib/lzw'
 
+encUri = encodeURIComponent
+decUri = decodeURIComponent
 pad = (n, p) -> (new Array(p + 1 - n.toString().length)).join('0') + n
 rnd = -> Date.now().toString(16) + pad (Math.random()*65536|0).toString(16), 4
 
 extend = (r={}, d) -> r[k] = v for k, v of d when v?; r
 toDict = (array, dict={}) -> dict[kvp[0]] = kvp[1] for kvp in array; dict
-parseQuery = (s) -> toDict(kvp.split('=') for kvp in s.replace(/^\?/,'').split('&'))
+parseQuery = (s) ->
+  toDict (for kvp in s.replace(/^\?/,'').split('&')
+    kvp.split('=').map decUri)
 buildQuery = (q) ->
-  (k+'='+encodeURIComponent(v) for k,v of q when k isnt '_hash').join('&') +
+  (encUri(k)+'='+encUri(v) for k,v of q when k isnt '_hash').join('&') +
   (if q._hash then '#'+q._hash else '')
 
 deserialize = ->
