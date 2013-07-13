@@ -1,4 +1,4 @@
-slug = (str) -> str.trim().replace(/\s+/g,'-').toLowerCase()
+slug = (str) -> str.trim().replace(/[^a-z0-9]+/ig,'-').toLowerCase()
 
 module.exports = 
   getCursorPosition: (el) ->
@@ -55,9 +55,12 @@ module.exports =
 
   slug: slug
 
+  link: (els) ->
+    for el in els
+      el.id = slug (n.textContent for n in el.childNodes when n.nodeType is el.TEXT_NODE).join('')
+
   toc: (el) ->
     '<ul>' + (for e in el.querySelectorAll('H1,H2,H3,H4,H5,H6')
-      e.id = slug e.textContent
       """
       <li><a href="##{e.id}"><#{e.tagName}>
       #{e.innerHTML}
