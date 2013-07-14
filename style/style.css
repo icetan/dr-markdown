@@ -317,7 +317,7 @@ body.toc #toc {
   height: 100%;
 }
 #input-wrap .CodeMirror-lines {
-  padding: 5em 1em 1em 0;
+  padding: 5em 1em 1em 24px;
 }
 #input-wrap .CodeMirror-focused div.CodeMirror-selected {
   background: rgba(255, 255, 0, 0.3);
@@ -330,7 +330,7 @@ body.toc #toc {
   width: 48em;
   height: 100%;
   margin: auto;
-  padding-left: 24px;
+  /* padding-left: 24px; */
 }
 
 [class^="uni-"],

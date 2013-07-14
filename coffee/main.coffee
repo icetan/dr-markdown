@@ -133,6 +133,24 @@ updateThemes = ->
 nextSlide = -> state.slide = (state.slide || 0)+1
 prevSlide = -> state.slide = Math.max (state.slide || 0)-1, 0
 
+updateHeaderAdjust = (lineEl)->
+  #line = editor.getCursor().line
+  #lineEl = document.querySelector('.CodeMirror-code').children[line]
+  if headHash = lineEl.querySelector('.headHash')
+    lineEl.removeChild lineEl.querySelector('.headHash')
+  m = lineEl.textContent.match /^#+\s*/
+  if m?
+    lineEl.firstChild.textContent = lineEl.textContent.substr(m[0].length)
+    spanEl = document.createElement 'span'
+    spanEl.className = 'headHash'
+    spanEl.textContent = m[0]
+    margin = (m[0].length * -0.58) + 'em'
+    spanEl.style.marginLeft = margin
+    spanEl.style.position = 'absolute'
+    lineEl.insertBefore spanEl, lineEl.childNodes[0]
+  #lineEl.style.marginLeft = margin
+  #document.querySelector('.CodeMirror-cursor').style.marginLeft = margin
+
 saveTimer = null
 editor = CodeMirror.fromTextArea document.getElementById('input-md'),
   mode: 'gfm'
@@ -141,6 +159,10 @@ editor = CodeMirror.fromTextArea document.getElementById('input-md'),
   lineWrapping: yes
   dragDrop: no
   autofocus: yes
+editor.on 'cursorActivity', ->
+  #updateHeaderAdjust()
+editor.on 'renderLine', (e, line, lineEl) ->
+  updateHeaderAdjust lineEl
 editor.on 'change', ->
   updateView()
   if initiated
