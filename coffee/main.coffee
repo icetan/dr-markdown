@@ -117,8 +117,8 @@ updateView = (force) ->
         viewHeight = viewWrapEl.offsetHeight
         cursorSpan = document.getElementById 'cursor'
         cursorTop = offset(cursorSpan).top
-        #cursorHeight = cursorSpan.offsetHeight
-        if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight #- cursorHeight
+        cursorHeight = cursorSpan.offsetHeight
+        if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight - cursorHeight
           viewWrapEl.scrollTop = cursorTop - viewHeight/2
       setViewHtml marked editor.getValue()
 
