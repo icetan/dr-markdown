@@ -110,9 +110,9 @@ updateView = (force) ->
       if cline isnt lastLine
         lastLine = cline
         md = editor.getValue().split '\n'
-        md[cline] += '<span id="cursor"></span>'
+        md[cline] += '^^^cursor^^^'
         md = md.join '\n'
-        setViewHtml marked md
+        setViewHtml marked(md).replace '^^^cursor^^^', '<span id="cursor"></span>'
         scrollTop = viewWrapEl.scrollTop
         viewHeight = viewWrapEl.offsetHeight
         cursorSpan = document.getElementById 'cursor'
