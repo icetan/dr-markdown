@@ -327,7 +327,7 @@ body.toc #toc {
 }
 #textarea-wrap {
   position: relative;
-  width: 48em;
+  width: 50em;
   height: 100%;
   margin: auto;
   /* padding-left: 24px; */
