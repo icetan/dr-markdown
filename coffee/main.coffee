@@ -13,7 +13,7 @@ require './unify.coffee'
 state_ = require './state.coffee'
 require './state-gist.coffee'
 
-{number, index, toc} = require './utils.coffee'
+{link, number, index, toc, offset} = require './utils.coffee'
 
 extend = (r={}, d) -> r[k] = v for k, v of d when v?; r
 extendA = (r={}, a) -> r[k] = v for [k, v] in a when v?; r
@@ -90,9 +90,11 @@ save = (force) ->
 
 setViewHtml = (html) ->
   viewEl.innerHTML = html
+  link viewEl.querySelectorAll 'H1,H2,H3,H4,H5,H6'
   updateIndex() if state.index
   updateToc() if state.toc
 
+lastLine = null
 updateView = (force) ->
   switch
     when force or state.mode in ['read', 'write']
@@ -105,17 +107,20 @@ updateView = (force) ->
         state.slide = md.length - 1
     else
       cline = editor.getCursor().line
-      md = editor.getValue().split '\n'
-      md[cline] += '<span id="cursor"></span>'
-      md = md.join '\n'
-      setViewHtml marked md
-      scrollTop = viewWrapEl.scrollTop
-      viewHeight = viewWrapEl.offsetHeight
-      cursorSpan = document.getElementById 'cursor'
-      cursorTop = cursorSpan.offsetTop
-      cursorHeight = cursorSpan.offsetHeight
-      if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight - cursorHeight
-        viewWrapEl.scrollTop = cursorTop - viewHeight/2
+      if cline isnt lastLine
+        lastLine = cline
+        md = editor.getValue().split '\n'
+        md[cline] += '^^^cursor^^^'
+        md = md.join '\n'
+        setViewHtml marked(md).replace '^^^cursor^^^', '<span id="cursor"></span>'
+        scrollTop = viewWrapEl.scrollTop
+        viewHeight = viewWrapEl.offsetHeight
+        cursorSpan = document.getElementById 'cursor'
+        cursorTop = offset(cursorSpan).top
+        cursorHeight = cursorSpan.offsetHeight
+        if cursorTop < scrollTop or cursorTop > scrollTop + viewHeight - cursorHeight
+          viewWrapEl.scrollTop = cursorTop - viewHeight/2
+      setViewHtml marked editor.getValue()
 
 updateTitle = -> document.title = (if saved then '' else '*')+docTitle()
 
@@ -128,7 +133,12 @@ updateThemes = ->
 nextSlide = -> state.slide = (state.slide || 0)+1
 prevSlide = -> state.slide = Math.max (state.slide || 0)-1, 0
 
-correctionTimer = null
+charWidth = null
+updateHeaderAdjust = (lineEl)->
+  return if not charWidth?
+  m = lineEl.textContent.match /^#+\s*/
+  lineEl.style.marginLeft = m[0].length * -charWidth + 'px' if m?
+
 saveTimer = null
 editor = CodeMirror.fromTextArea document.getElementById('input-md'),
   mode: 'gfm'
@@ -137,18 +147,29 @@ editor = CodeMirror.fromTextArea document.getElementById('input-md'),
   lineWrapping: yes
   dragDrop: no
   autofocus: yes
+editor.on 'renderLine', (e, line, lineEl) -> updateHeaderAdjust lineEl
 editor.on 'change', ->
   updateView()
   if initiated
     if saved
       saved = no
       updateTitle()
-    clearTimeout correctionTimer
-    correctionTimer = setTimeout (-> updateView true), 1000
     clearTimeout saveTimer
     saveTimer = setTimeout save, 5000
   else
     updateTitle()
+
+findEditorCharWidth = ->
+  textNode = document.createTextNode new Array(61).join('#')
+  preEl = document.createElement 'pre'
+  preEl.appendChild textNode
+  document.querySelector('.CodeMirror-code').appendChild preEl
+  range = document.createRange()
+  range.selectNodeContents textNode
+  bb = range.getBoundingClientRect()
+  preEl.parentNode.removeChild preEl
+  bb.width/60
+charWidth = findEditorCharWidth()
 
 restore = (data) ->
   currentText = editor.getValue()

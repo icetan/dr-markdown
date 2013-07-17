@@ -6,8 +6,13 @@ Dr. Markdown <big>☤</big>
 Usage
 -----
 
-Type [markdown](http://daringfireball.net/projects/markdown/) on the left and
+Type [Markdown](http://daringfireball.net/projects/markdown/) on the left and
 a nice formated document will come out on the right.
+
+A good
+[Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
+for things you can do with Markdown and GitHub Flavour Markdown, which is also
+supported.
 
 You can toggle different modes by clicking in the right and left margins.
 

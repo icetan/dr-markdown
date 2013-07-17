@@ -4,6 +4,8 @@
   line-height: 1.5em;
 }
 
+.index { color: #888; }
+
 a{ color: #0645ad; text-decoration:none;}
 a:visited{ color: #0b0080; }
 a:hover{ color: #06e; }
@@ -72,10 +74,8 @@ sub, sup {
 sup { top: -0.5em; }
 sub { bottom: -0.25em; }
 
-ul, ol {
-  margin: 0;
-  padding: 0 0 0 1.25em;
-}
+ul, ol { margin: 0; padding: 0; }
+li ul, li ol { margin-left: 3em; }
 li p:last-child { margin: 0; }
 dd { margin: 0 0 0 1.25em; }
 
@@ -85,5 +85,6 @@ img {
   vertical-align: middle;
 }
 
-table { border-collapse: collapse; border-spacing: 0; }
+table { border-collapse: collapse; border-spacing: 0; width: 100%; }
+th { text-align: left; }
 td { vertical-align: top; }
