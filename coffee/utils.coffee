@@ -78,3 +78,15 @@ module.exports =
       pos.left += el.offsetLeft or 0
       pos.top += el.offsetTop or 0
     pos
+
+  fullscreen: (el=document.body) ->
+    requestMethod = el.requestFullScreen or
+      el.webkitRequestFullScreen or
+      el.mozRequestFullScreen or
+      el.msRequestFullScreen
+    if requestMethod
+      requestMethod.call el, Element.ALLOW_KEYBOARD_INPUT
+    else if el is document.body and typeof window.ActiveXObject isnt 'undefined'
+      wscript = new ActiveXObject 'WScript.Shell'
+      wscript.SendKeys '{F11}' if wscript isnt null
+    return

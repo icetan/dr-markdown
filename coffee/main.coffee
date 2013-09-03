@@ -13,7 +13,7 @@ require './unify.coffee'
 state_ = require './state.coffee'
 require './state-gist.coffee'
 
-{link, number, index, toc, offset} = require './utils.coffee'
+{link, number, index, toc, offset, fullscreen} = require './utils.coffee'
 
 extend = (r={}, d) -> r[k] = v for k, v of d when v?; r
 extendA = (r={}, a) -> r[k] = v for [k, v] in a when v?; r
@@ -224,6 +224,10 @@ model =
           when 3 then state.mode = ''; true # ctrl+alt+c
           when 22 then state.mode = 'read'; true # ctrl+alt+v
           when 19 then save true; true
+    else if e.altKey
+      hit = switch e.keyCode
+        when 13 then fullscreen(); true
+
     e.preventDefault() if hit
   hotkey: (e) ->
     hit = undefined

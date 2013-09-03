@@ -12,14 +12,14 @@
   <link rel="stylesheet" vx-href="themes/{{theme}}.css">
 </head>
 
-<body class="noise {{mode}} {{showToc}} {{showIndex}}"
+<body class="{{mode}} {{showToc}} {{showIndex}}"
       onclick="{{closePopups}}" onmouseout="{{mouseout}}"
       onkeypress="{{hotkeyCombo}}" onkeydown="{{hotkey}}"
       ondrop="{{drop}}{{noop}}" ondragover="{{noop}}">
   <div id="expand-view" onclick="{{expandView}}"></div>
   <div id="expand-input" onclick="{{expandInput}}"></div>
 
-  <div id="input-wrap">
+  <div id="input-wrap" class="noise">
     <div id="textarea-wrap">
       <textarea id="input-md"></textarea>
       <div id="settings">
