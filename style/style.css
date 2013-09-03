@@ -100,6 +100,7 @@ body {
   left: 0;
   bottom: 0;
   min-width: 0;
+  background-color: #fafafa;
   -webkit-transition: min-width 0.5s ease;
   -moz-transition: min-width 0.5s ease;
   -ms-transition: min-width 0.5s ease;
