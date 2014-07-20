@@ -74,8 +74,6 @@ sub, sup {
 sup { top: -0.5em; }
 sub { bottom: -0.25em; }
 
-ul, ol { margin: 0; padding: 0; }
-li ul, li ol { margin-left: 3em; }
 li p:last-child { margin: 0; }
 dd { margin: 0 0 0 1.25em; }
 
